@@ -11,8 +11,6 @@ namespace snaketest
 {
     class Snake
     {
-
-        //this is a test change
         public Rectangle[] Body; // body of snake, needs to be array so we can add to it.
         int speed = 20; // default speed of snake
         public enum Direction {Up,Down,Left,Right};

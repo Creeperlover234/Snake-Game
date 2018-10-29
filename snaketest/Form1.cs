@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Media;
+using System.Net;
+using System.Diagnostics;
 
 namespace snaketest
 {
@@ -20,6 +22,8 @@ namespace snaketest
          * ~13 else if statements
          * over 800 lines of code
         */
+        
+        WebClient webc = new WebClient();
 
         //rec for items
         Rectangle food = new Rectangle(); // food/apple
@@ -30,7 +34,6 @@ namespace snaketest
 
         //player
         private Snake snake;
-        int direction; // 1-4 int for direction to set the snake
         //end
 
         //food
@@ -54,7 +57,8 @@ namespace snaketest
         int highScore = 0; 
         bool bounds = true; // disable bound/enable
         string difficulty = "Easy"; // default difficulty is easy.
-        string buildNumber = "102918dr5";
+        string currentUpdate = "102918dr5";
+        string newUpdate;
         SoundPlayer _menselect; // menu select
         SoundPlayer _die; // death sound
         SoundPlayer _eat; // eat sound
@@ -121,7 +125,31 @@ namespace snaketest
         {
             InitializeComponent();
 
-            this.Text = "Snake Build: (" + buildNumber + ")";
+
+            //Update Checker
+            byte[] raw = webc.DownloadData("https://raw.githubusercontent.com/Creeperlover234/Snake-Game/master/release");
+
+            newUpdate = Encoding.UTF8.GetString(raw);
+
+            if (currentUpdate == newUpdate)
+            {
+                createdLabel.Text += "(latest build)";
+                this.Text = "Snake (latest build)";
+            }
+            else
+            {
+                DialogResult UpdateYesNo = MessageBox.Show("There is a newer version of this application.\nWould you like to update?", "New Update", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk);
+                if(UpdateYesNo == DialogResult.Yes)
+                {
+                    Process.Start("https://github.com/Creeperlover234/Snake-Game/releases");
+                }
+                else{}
+
+                createdLabel.Text += "(old build)";
+                this.Text = "Snake (old build)";
+                createdLabel.Left += 10;
+            }
+            //End
 
             //below, we are initializing the sounds
             _die = new SoundPlayer(Properties.Resources.die);
@@ -454,7 +482,7 @@ namespace snaketest
                 label12.Show();
                 label13.Show();
                 label14.Show();
-                label1.Text = "Direction: " + direction;
+                label1.Text = "Direction: " + snake.direction;
                 label2.Text = "Points: " + points;
                 label3.Text = "Paused: " + paused;
                 label4.Text = "Game Over: " + gameOver;
@@ -981,7 +1009,7 @@ namespace snaketest
 
         private void createdLabel_Click(object sender, EventArgs e)// clicking created by button
         {
-            MessageBox.Show("Created by Carson Kelley\nLatest Build. Build#: " + buildNumber, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Created by Carson Kelley\nLatest Build. Build#: " + currentUpdate, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         /*

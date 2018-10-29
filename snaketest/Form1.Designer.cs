@@ -331,7 +331,7 @@
             // 
             this.createdLabel.AutoSize = true;
             this.createdLabel.BackColor = System.Drawing.SystemColors.AppWorkspace;
-            this.createdLabel.Location = new System.Drawing.Point(660, 548);
+            this.createdLabel.Location = new System.Drawing.Point(606, 547);
             this.createdLabel.Name = "createdLabel";
             this.createdLabel.Size = new System.Drawing.Size(125, 13);
             this.createdLabel.TabIndex = 25;
