@@ -79,10 +79,12 @@
             this.firstTime = new System.Windows.Forms.Timer(this.components);
             this.boundsLabel = new System.Windows.Forms.Label();
             this.outOfBoundTimer = new System.Windows.Forms.Timer(this.components);
+            this.muteButton = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.bonusPow)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dpPow)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ghostPow)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.muteButton)).BeginInit();
             this.SuspendLayout();
             // 
             // directionTimer
@@ -515,12 +517,23 @@
             this.outOfBoundTimer.Interval = 110;
             this.outOfBoundTimer.Tick += new System.EventHandler(this.outOfBoundTimer_Tick);
             // 
+            // muteButton
+            // 
+            this.muteButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.muteButton.Location = new System.Drawing.Point(562, 521);
+            this.muteButton.Name = "muteButton";
+            this.muteButton.Size = new System.Drawing.Size(32, 32);
+            this.muteButton.TabIndex = 44;
+            this.muteButton.TabStop = false;
+            this.muteButton.Click += new System.EventHandler(this.muteButton_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.AppWorkspace;
             this.ClientSize = new System.Drawing.Size(784, 561);
+            this.Controls.Add(this.muteButton);
             this.Controls.Add(this.boundsLabel);
             this.Controls.Add(this.highScoreLabel);
             this.Controls.Add(this.label15);
@@ -571,6 +584,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dpPow)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ghostPow)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.muteButton)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -627,6 +641,7 @@
         private System.Windows.Forms.Timer firstTime;
         private System.Windows.Forms.Label boundsLabel;
         private System.Windows.Forms.Timer outOfBoundTimer;
+        private System.Windows.Forms.PictureBox muteButton;
     }
 }
 

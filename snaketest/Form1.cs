@@ -60,6 +60,7 @@ namespace snaketest
         string difficulty = "Easy"; // default difficulty is easy.
         string currentUpdate = "102918dr6";
         string newUpdate;
+        bool changedMute = false;
         SoundPlayer _menselect; // menu select
         SoundPlayer _die; // death sound
         SoundPlayer _eat; // eat sound
@@ -164,7 +165,9 @@ namespace snaketest
             _powerup = new SoundPlayer(Properties.Resources.powerup);
             _menselect = new SoundPlayer(Properties.Resources.menselect);
             //end
-            
+
+            muteButton.Image = Properties.Resources.unMute;
+
             pictureBox1.BackColor = Color.Black; // set background of picturebox to black
 
             difEasy.Font = new Font(difEasy.Font.Name, difEasy.Font.SizeInPoints, FontStyle.Underline); // underline easy(default dif)
@@ -212,9 +215,6 @@ namespace snaketest
         {
             snake.Draw(e.Graphics); //Draw snake on screen
 
-            for (int x = 0; x < 32; x++) // draw grid behind picturebox
-                for (int y = 0; y < 32; y++)
-                    e.Graphics.DrawRectangle(Pens.Black, x * 20, y * 20, 20, 20); // 32 by 32 grid of 20 by 20 squares
 
             // Below we are creating Bitmaps for the powerups/items, this makes it extremely easy to manipulate the images.
 
@@ -309,6 +309,9 @@ namespace snaketest
                     break;
                 case Keys.D4: // set dif to expert
                     difExpert_Click(sender, e);
+                    break;
+                case Keys.M: // mute button
+                    muteButton_Click(sender, e);
                     break;
                 default:
                     break;
@@ -446,36 +449,13 @@ namespace snaketest
 
             if (gameOver) // if game is over, do code
             {
-                snake.Body[0].X = 777; //set snake off screen
+                snake.direction = Snake.Direction.NONE;
                 powerupTimer.Stop(); // stop powerup timer, so powerups dont keep spawning.
                 gmovLabel.Visible = true; // show gameover textbox
                 restartLabel.Visible = true; // show restart textbox
                 if (!stop) // we need this because since gameOver check is in a timer, death sound would play repeadately. Trust me, I destroyed my ears already.
                 {
-                    bool changed = false;
-
                     die = true;
-
-                    if (points > highScore) // if your score was higher than the high score, set current score to high score.
-                    {
-                        highScore = points;
-                        changed = true;
-                    }
-
-                    if (changed)
-                    {
-                        try
-                        {
-                            StreamWriter writeFile = new StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SnakeGame\highScore.txt");
-                            writeFile.Write(highScore);
-                            changed = false;
-                            writeFile.Close();
-                        }catch(Exception error)
-                        {
-                            MessageBox.Show(error.Message);
-                        }
-                    }
-
                     stop = true;
                 }
                 firstStart = true;
@@ -504,7 +484,30 @@ namespace snaketest
 
             if (die)
             {
+                bool changed = false;
                 die = false;
+
+                if (points > highScore) // if your score was higher than the high score, set current score to high score.
+                {
+                    highScore = points;
+                    changed = true;
+                }
+
+                if (changed)
+                {
+                    try
+                    {
+                        StreamWriter writeFile = new StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SnakeGame\highScore.txt");
+                        writeFile.Write(highScore);
+                        changed = false;
+                        writeFile.Close();
+                    }
+                    catch (Exception error)
+                    {
+                        MessageBox.Show(error.Message);
+                    }
+                }
+
                 _die.Play();
             }
 
@@ -644,7 +647,7 @@ namespace snaketest
             restartLabel.Visible = false;
         }
         
-        void genRandom()
+        void genRandom() // move apple to random spot on gameboard
         {
             rand1 = rand.Next(20, 500); // generate random X coord
             rand2 = rand.Next(20, 500); // generate random Y coord
@@ -1073,6 +1076,31 @@ namespace snaketest
                 latestOrOld = "Old Build.";
 
             MessageBox.Show("Created by Carson Kelley\n" + latestOrOld + " Build#: " + currentUpdate, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void muteButton_Click(object sender, EventArgs e) // Mute/Unmute Button
+        {
+
+            if (changedMute)
+            {
+                muteButton.Image = Properties.Resources.unMute;
+                _die = new SoundPlayer(Properties.Resources.die);
+                _eat = new SoundPlayer(Properties.Resources.eatfood);
+                _powerup = new SoundPlayer(Properties.Resources.powerup);
+                _menselect = new SoundPlayer(Properties.Resources.menselect);
+                _menselect.Play();
+                changedMute = false;
+                return;
+            }
+            else if (muteButton.Image != Properties.Resources.Mute && !changedMute)
+            {
+                muteButton.Image = Properties.Resources.Mute;
+                changedMute = true;
+                _die = new SoundPlayer(Properties.Resources.blank);
+                _eat = new SoundPlayer(Properties.Resources.blank);
+                _powerup = new SoundPlayer(Properties.Resources.blank);
+                _menselect = new SoundPlayer(Properties.Resources.blank);
+            }
         }
 
         /*

@@ -13,7 +13,7 @@ namespace snaketest
     {
         public Rectangle[] Body; // body of snake, needs to be array so we can add to it.
         int speed = 20; // default speed of snake
-        public enum Direction {Up,Down,Left,Right};
+        public enum Direction {Up,Down,Left,Right,NONE};
         public Direction direction;
         LinearGradientBrush bodyColor = new LinearGradientBrush(new Point(-10, 550), new Point(560, -10), Color.FromArgb(255, 255, 0, 0), Color.FromArgb(255, 0, 0, 255));
         LinearGradientBrush headColor = new LinearGradientBrush(new Point(-10, 550), new Point(560, -10), Color.FromArgb(255, 0, 230, 255), Color.FromArgb(205, 135, 0, 255));
@@ -46,10 +46,11 @@ namespace snaketest
 
         public void Draw(Graphics g)
         {
-            g.FillEllipse(headColor, Body[0]); // CIRCLES
-
             for (int i = Body.Length - 1; i > 0; i--)
                 g.FillEllipse(bodyColor, Body[i]); // MOAR CIRCLEZZZZZ
+
+            g.FillEllipse(headColor, Body[0]); // CIRCLES
+
         }
 
         public void Grow() // creates new rectangle to snake array, in essence, the snake 'grows'
@@ -75,6 +76,10 @@ namespace snaketest
                     break;
                 case Direction.Right:
                     Body[0].X += speed;
+                    break;
+                case Direction.NONE:
+                    Body[0].X += 0;
+                    Body[0].Y += 0;
                     break;
                 default:
                     break;
