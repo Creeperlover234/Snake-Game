@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using System.Media;
 using System.Net;
+using System.IO;
 using System.Diagnostics;
 
 namespace snaketest
@@ -44,6 +45,7 @@ namespace snaketest
         //end
 
         //game stuff
+        string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData); // appdata location
         int points; // the points for the game
         bool paused = false; // checks if game is paused
         bool powerupsDisabled = false; // check if player disabled powerups
@@ -57,7 +59,7 @@ namespace snaketest
         int highScore = 0; 
         bool bounds = true; // disable bound/enable
         string difficulty = "Easy"; // default difficulty is easy.
-        string currentUpdate = "102918dr5";
+        string currentUpdate = "102918dr6";
         string newUpdate;
         SoundPlayer _menselect; // menu select
         SoundPlayer _die; // death sound
@@ -177,7 +179,23 @@ namespace snaketest
             //disable restart/pause buttons.
             pauseplayButton.Enabled = false;
             restartButton.Enabled = false;
-            
+
+            //Create highscore and snake folder if necessary
+            CreateFile();
+
+
+            try
+            {
+                StreamReader readFile = new StreamReader(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SnakeGame\highScore.txt");
+                highScore = Convert.ToInt32(readFile.ReadLine());
+                readFile.Close();
+                highScoreLabel.Text = "High Score: " + highScore; // update highscore
+            }
+            catch(Exception ex){
+                MessageBox.Show("Error: " + ex.Message + "\nPlease reset highScore.txt");
+                highScore = 0;
+            }
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -220,8 +238,6 @@ namespace snaketest
                     {
                         if (gmovLabel.Text != "Game Over")
                             gmovLabel.Text = "Game Over";
-                        if (points > highScore) // if your score was higher than the high score, set current score to high score.
-                            highScore = points;
 
                         lastScore = points;
                         Restart(); // restart game
@@ -431,7 +447,30 @@ namespace snaketest
                 restartLabel.Visible = true; // show restart textbox
                 if (!stop) // we need this because since gameOver check is in a timer, death sound would play repeadately. Trust me, I destroyed my ears already.
                 {
+                    bool changed = false;
+
                     die = true;
+
+                    if (points > highScore) // if your score was higher than the high score, set current score to high score.
+                    {
+                        highScore = points;
+                        changed = true;
+                    }
+
+                    if (changed)
+                    {
+                        try
+                        {
+                            StreamWriter writeFile = new StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SnakeGame\highScore.txt");
+                            writeFile.Write(highScore);
+                            changed = false;
+                            writeFile.Close();
+                        }catch(Exception error)
+                        {
+                            MessageBox.Show(error.Message);
+                        }
+                    }
+
                     stop = true;
                 }
                 firstStart = true;
@@ -526,6 +565,18 @@ namespace snaketest
         /*
          * Game functions -- Restart, and start
         */
+
+        private void CreateFile()
+        {
+            if (File.Exists(appData + @"\SnakeGame\highScore.txt"))
+                return;
+
+            Directory.CreateDirectory(appData + @"\SnakeGame\");
+
+            var highScoreTXT = File.Create(appData + @"\SnakeGame\highScore.txt");
+
+            highScoreTXT.Close();
+        }
 
         //in short, this function stops all timers and disables all powerups
         private void Restart()
@@ -1009,7 +1060,14 @@ namespace snaketest
 
         private void createdLabel_Click(object sender, EventArgs e)// clicking created by button
         {
-            MessageBox.Show("Created by Carson Kelley\nLatest Build. Build#: " + currentUpdate, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            string latestOrOld;
+
+            if (currentUpdate == newUpdate)
+                latestOrOld = "Latest Build.";
+            else
+                latestOrOld = "Old Build.";
+
+            MessageBox.Show("Created by Carson Kelley\n" + latestOrOld + " Build#: " + currentUpdate, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         /*
