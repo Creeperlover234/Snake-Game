@@ -44,6 +44,7 @@ namespace snaketest
 
         //game stuff
         string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData); // appdata location
+            WebClient webc = new WebClient();
         int points; // the points for the game
         bool paused = false; // checks if game is paused
         bool powerupsDisabled = false; // check if player disabled powerups
@@ -127,30 +128,33 @@ namespace snaketest
 
 
             //Update Checker
-
-            WebClient webc = new WebClient();
-            byte[] raw = webc.DownloadData("https://raw.githubusercontent.com/Creeperlover234/Snake-Game/master/release");
-
-            newUpdate = Encoding.UTF8.GetString(raw);
-            newUpdate = newUpdate.Remove(9, 1);
-
-            if (newUpdate == currentUpdate)
+            try
             {
-                createdLabel.Text += "(latest build)";
-                this.Text = "Snake (latest build)";
-            }
-            else
-            {
-                DialogResult UpdateYesNo = MessageBox.Show("There is a newer version of this application.\nWould you like to update?", "New Update " + newUpdate, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk);
-                if (UpdateYesNo == DialogResult.Yes)
+                byte[] raw = webc.DownloadData("https://raw.githubusercontent.com/Creeperlover234/Snake-Game/master/release");
+
+                newUpdate = Encoding.UTF8.GetString(raw);
+
+                if (newUpdate == currentUpdate)
                 {
-                    Process.Start("https://github.com/Creeperlover234/Snake-Game/releases");
+                    createdLabel.Text += "(latest build)";
+                    this.Text = "Snake (latest build)";
                 }
-                else { }
+                else
+                {
+                    DialogResult UpdateYesNo = MessageBox.Show("There is a newer version of this application.\nWould you like to update?", "New Update " + newUpdate, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk);
+                    if (UpdateYesNo == DialogResult.Yes)
+                    {
+                        Process.Start("https://github.com/Creeperlover234/Snake-Game/releases");
+                    }
+                    else { }
 
-                createdLabel.Text += "(old build)";
-                this.Text = "Snake (old build)";
-                createdLabel.Left += 10;
+                    createdLabel.Text += "(old build)";
+                    this.Text = "Snake (old build)";
+                    createdLabel.Left += 10;
+                }
+            }catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
             //End
 
@@ -198,7 +202,7 @@ namespace snaketest
             }
 
         }
-
+        
         private void Form1_Load(object sender, EventArgs e)
         {
         }
