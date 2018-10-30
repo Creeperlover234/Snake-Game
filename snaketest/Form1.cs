@@ -23,8 +23,6 @@ namespace snaketest
          * ~13 else if statements
          * over 800 lines of code
         */
-        
-        WebClient webc = new WebClient();
 
         //rec for items
         Rectangle food = new Rectangle(); // food/apple
@@ -129,23 +127,26 @@ namespace snaketest
 
 
             //Update Checker
+
+            WebClient webc = new WebClient();
             byte[] raw = webc.DownloadData("https://raw.githubusercontent.com/Creeperlover234/Snake-Game/master/release");
 
             newUpdate = Encoding.UTF8.GetString(raw);
+            newUpdate = newUpdate.Remove(9, 1);
 
-            if (currentUpdate == newUpdate)
+            if (newUpdate == currentUpdate)
             {
                 createdLabel.Text += "(latest build)";
                 this.Text = "Snake (latest build)";
             }
             else
             {
-                DialogResult UpdateYesNo = MessageBox.Show("There is a newer version of this application.\nWould you like to update?", "New Update", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk);
-                if(UpdateYesNo == DialogResult.Yes)
+                DialogResult UpdateYesNo = MessageBox.Show("There is a newer version of this application.\nWould you like to update?", "New Update " + newUpdate, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk);
+                if (UpdateYesNo == DialogResult.Yes)
                 {
                     Process.Start("https://github.com/Creeperlover234/Snake-Game/releases");
                 }
-                else{}
+                else { }
 
                 createdLabel.Text += "(old build)";
                 this.Text = "Snake (old build)";
