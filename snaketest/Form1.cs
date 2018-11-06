@@ -25,6 +25,7 @@ namespace snaketest
         */
 
         //rec for items
+        Rectangle ball = new Rectangle();
         Rectangle food = new Rectangle(); // food/apple
         Rectangle ghost = new Rectangle(); // ghost powerup
         Rectangle dp = new Rectangle(); // double point powerup
@@ -35,6 +36,10 @@ namespace snaketest
         private Snake snake;
         //end
 
+        //ai
+        private Enemy enemy;
+        //end
+
         //food
         double foodX; // food X coordinate
         double foodY; // food Y coordinate
@@ -42,9 +47,19 @@ namespace snaketest
         int rand2; // randnum Y for food
         //end
 
+        //ball
+        double ballx = 50;
+        double bally = 50;
+        bool left = false;
+        bool bottom = false;
+        int speedX = 5;
+        int speedY = 8;
+        int ballrandx;
+        int ballrandy;
+
         //game stuff
         string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData); // appdata location
-            WebClient webc = new WebClient();
+        WebClient webc = new WebClient();
         int points; // the points for the game
         bool paused = false; // checks if game is paused
         bool powerupsDisabled = false; // check if player disabled powerups
@@ -58,9 +73,11 @@ namespace snaketest
         int highScore = 0; 
         bool bounds = true; // disable bound/enable
         string difficulty = "Easy"; // default difficulty is easy.
-        string currentUpdate = "102918dr6";
+        string currentUpdate = "110618dr7";
         string newUpdate;
         bool changedMute = false;
+        bool aiEnemy = false;
+        bool evilBall = false;
         SoundPlayer _menselect; // menu select
         SoundPlayer _die; // death sound
         SoundPlayer _eat; // eat sound
@@ -173,12 +190,14 @@ namespace snaketest
             difEasy.Font = new Font(difEasy.Font.Name, difEasy.Font.SizeInPoints, FontStyle.Underline); // underline easy(default dif)
 
             snake = new Snake(); //create snake boi
+            enemy = new Enemy(); // ai
 
             //set gameover to true on startup for a welcome message
             firstTime.Start(); // we start this timer to update current difficulty on startup, this timer is not used at all after startup.
             gameOver = true; // so gameover stuff does its stuff
             gmovLabel.Text = "  Welcome!";
             snake.Body[0].X = 777; //set snake off screen
+            enemy.AIBody[0].X = 999;
             foodX = 899; // set food off-screen
             powerupTimer.Stop(); // stop powerup timer, so powerups dont keep spawning.
             gmovLabel.Visible = true; // show gameover textbox
@@ -198,9 +217,12 @@ namespace snaketest
                 highScore = Convert.ToInt32(readFile.ReadLine());
                 readFile.Close();
                 highScoreLabel.Text = "High Score: " + highScore; // update highscore
+            }catch(FileNotFoundException)
+            {
+                MessageBox.Show("Error. File was not found. Please re-run this program.");
             }
             catch(Exception ex){
-                MessageBox.Show("Error: " + ex.Message + "\nPlease reset highScore.txt");
+                MessageBox.Show("Error: " + ex.Message + "\nPlease reset highScore.txt\nLocated in %appdata%\\SnakeGame\\");
                 highScore = 0;
             }
 
@@ -213,8 +235,11 @@ namespace snaketest
         //This picturebox is the gameboard, this is what shows all the powerups and the snake.
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
+            enemy.Draw(e.Graphics);
             snake.Draw(e.Graphics); //Draw snake on screen
 
+            //evil ball
+            e.Graphics.FillEllipse(Brushes.Tomato,  ball.X = (int)ballx, ball.Y = (int)bally, ball.Width = 15, ball.Height = 15);
 
             // Below we are creating Bitmaps for the powerups/items, this makes it extremely easy to manipulate the images.
 
@@ -250,6 +275,8 @@ namespace snaketest
                         stop = false;
                         foodEatTimer.Start(); // start food timer
                         directionTimer.Start(); // start direction timer
+                        if(aiEnemy)
+                            aiDirection.Start();
                         powerupTimer.Start(); // start powerup timers
                         gameOver = false; // set gamover to false
                         gmovLabel.Visible = false; // remove gameover text
@@ -325,6 +352,75 @@ namespace snaketest
                 if (snake.Body[0].IntersectsWith(snake.Body[i]) && !ghostmode) // if any part of snake collide with eachother, end game
                     gameOver = true;
 
+            if (evilBall)
+            {
+                if (ballx < 520 && !left && !gameOver)
+                {
+                    ballx += speedX;
+                    if (ballx >= 520)
+                        left = true;
+                }
+                else if (left && !gameOver)
+                {
+                    ballx -= speedX;
+                    if (ballx < 0)
+                        left = false;
+                }
+                else if (gameOver)
+                {
+                    ballx += 0;
+                    bally += 0;
+                }
+
+                if (bally < 520 && !bottom && !gameOver)
+                {
+                    bally += speedY;
+                    if (bally >= 520)
+                        bottom = true;
+                }
+                else if (bottom && !gameOver)
+                {
+                    bally -= speedY;
+                    if (bally < 0)
+                        bottom = false;
+                }
+            }else
+            {
+                ballx = 999;
+            }
+
+            if (snake.Body[0].IntersectsWith(ball) && !ghostmode)
+                gameOver = true;
+            else if (enemy.AIBody[0].IntersectsWith(ball) && aiEnemy)
+                AIRestart();
+
+            if (aiEnemy)
+            {
+                //make the ai actually do stuffs
+                if (foodY < enemy.AIBody[0].Y && enemy.directionAI != Enemy.DirectionAI.Down)
+                    enemy.directionAI = Enemy.DirectionAI.Up;
+                else if (foodY > enemy.AIBody[0].Y && enemy.directionAI != Enemy.DirectionAI.Up)
+                    enemy.directionAI = Enemy.DirectionAI.Down;
+                else if (foodX < enemy.AIBody[0].X && enemy.directionAI != Enemy.DirectionAI.Right)
+                    enemy.directionAI = Enemy.DirectionAI.Left;
+                else if (foodX > enemy.AIBody[0].X && enemy.directionAI != Enemy.DirectionAI.Left)
+                    enemy.directionAI = Enemy.DirectionAI.Right;
+                else if (foodX < enemy.AIBody[0].X && enemy.directionAI == Enemy.DirectionAI.Right)
+                    enemy.directionAI = Enemy.DirectionAI.Down;
+                else if (foodX > enemy.AIBody[0].X && enemy.directionAI == Enemy.DirectionAI.Left)
+                    enemy.directionAI = Enemy.DirectionAI.Down;
+                else if (foodY < enemy.AIBody[0].Y && enemy.directionAI == Enemy.DirectionAI.Up)
+                    enemy.directionAI = Enemy.DirectionAI.Right;
+                else if (foodY > enemy.AIBody[0].Y && enemy.directionAI == Enemy.DirectionAI.Down)
+                    enemy.directionAI = Enemy.DirectionAI.Left;
+            }
+            else
+            {
+                enemy.AIBody[0].X = 999;
+                enemy.directionAI = Enemy.DirectionAI.NONE;
+            }
+
+
             if (!bounds) //if player disabled bounds
             {
                 /*
@@ -371,6 +467,8 @@ namespace snaketest
             {
                 if (snake.Body[0].Y > 520 || snake.Body[0].X < 0 || snake.Body[0].Y < 0 || snake.Body[0].X > 520) // if snake goes off screen, end game
                     gameOver = true; //setting this bool to true effectively ends the game.
+                if (enemy.AIBody[0].Y > 520 && aiEnemy || enemy.AIBody[0].X < 0 && aiEnemy || enemy.AIBody[0].Y < 0 && aiEnemy || enemy.AIBody[0].X > 520 && aiEnemy) // if snake goes off screen, end game
+                    AIRestart(); //setting this bool to true effectively ends the game.
             }
 
 
@@ -393,17 +491,17 @@ namespace snaketest
                     points += 20; //add 20 points
                     snake.Grow(); // grow again, so double growth
                 }
-                else if(bpon)// if we have bonus points
+                else if (bpon)// if we have bonus points
                 {
                     points += 30;
                 }
-                else
+                else//if no bp or dp powerup
                 {
                     points += 10;
                 }
 
                 snake.Grow();
-            }else if (snake.Body[0].IntersectsWith(ghost))
+            } else if (snake.Body[0].IntersectsWith(ghost))
             {
                 _powerup.Play();
                 ghostTimer.Stop(); // stop ghosttimer if started , should never happen
@@ -417,7 +515,7 @@ namespace snaketest
                 ghostPow.Invalidate(); // update pic box
                 ghostTime.Start(); // start countdown timer.
                 ghostTimer.Start(); // start ghost timer
-            }else if (snake.Body[0].IntersectsWith(dp))
+            } else if (snake.Body[0].IntersectsWith(dp))
             {
                 _powerup.Play();
                 doublepointTimer.Stop(); // stop double point timer if started, should never happen.
@@ -431,7 +529,7 @@ namespace snaketest
                 formdpy = 3;
                 dpPow.Invalidate();
                 doublepointTimer.Start();
-            }else if (snake.Body[0].IntersectsWith(bonus))
+            } else if (snake.Body[0].IntersectsWith(bonus))
             {
                 _powerup.Play();
                 bonuspointTimer.Stop();
@@ -461,6 +559,7 @@ namespace snaketest
                 firstStart = true;
                 //Stop all time timers
                 bpTime.Stop();
+                aiDirection.Stop();
                 outOfBoundTimer.Stop();
                 bpTimeLabel.Hide();
                 dpTime.Stop();
@@ -476,10 +575,6 @@ namespace snaketest
                 //re-enable buttons
                 pauseplayButton.Enabled = true;
                 restartButton.Enabled = true;
-                difEasy.Enabled = true;
-                difNorm.Enabled = true;
-                difHard.Enabled = true;
-                difExpert.Enabled = true;
             }
 
             if (die)
@@ -574,12 +669,21 @@ namespace snaketest
          * Game functions -- Restart, and start
         */
 
+        void AIRestart()
+        {
+            if (!aiEnemy)
+                return;
+            enemy = new Enemy();
+            enemy.directionAI = Enemy.DirectionAI.Right;
+        }
+
         private void CreateFile()
         {
             if (File.Exists(appData + @"\SnakeGame\highScore.txt"))
                 return;
 
-            Directory.CreateDirectory(appData + @"\SnakeGame\");
+            if(!Directory.Exists(appData + @"\SnakeGame\"))
+                Directory.CreateDirectory(appData + @"\SnakeGame\");
 
             var highScoreTXT = File.Create(appData + @"\SnakeGame\highScore.txt");
 
@@ -602,13 +706,17 @@ namespace snaketest
             //reset snake
             snake = new Snake();
             snake.direction = Snake.Direction.Right;
+            //reset AI
+            AIRestart();
 
             //generate random x,y for apple.
             genRandom();
+            ballRand();
 
             //disable all timers
             foodEatTimer.Stop();
             directionTimer.Stop();
+            aiDirection.Stop();
             powerupTimer.Stop();
             outOfBoundTimer.Stop();
             dpTime.Stop();
@@ -656,6 +764,19 @@ namespace snaketest
             foodY = Math.Round(Math.Ceiling((float)rand2 / 20) * 20, MidpointRounding.ToEven); // set foody to the random number
         }
 
+        void ballRand()
+        {
+            if (!evilBall)
+                return;
+
+            ballrandx = rand.Next(20, 500);
+            ballrandy = rand.Next(20, 500);
+
+            ballx = Math.Round(Math.Ceiling((float)ballrandx / 20) * 20, MidpointRounding.ToEven); // set foodx to the random number
+            bally = Math.Round(Math.Ceiling((float)ballrandy / 20) * 20, MidpointRounding.ToEven); // set foody to the random number
+
+        }
+
         private void firstTime_Tick(object sender, EventArgs e)
         {
             restartLabel.Text = "Press Enter or R to Start.\n       Difficulty: " + difficulty;
@@ -671,6 +792,29 @@ namespace snaketest
                 snake.Body[0].Y = 0;
             else if (snake.Body[0].Y < 0)
                 snake.Body[0].Y = 520;
+        }
+
+        private void aiDirection_Tick(object sender, EventArgs e)
+        {
+            if (!aiEnemy)
+                return;
+
+            for (int i = 1; i < enemy.AIBody.Length; i++) // get length of snake
+                if (enemy.AIBody[0].IntersectsWith(enemy.AIBody[i])) // if any part of snake collide with eachother, end game
+                    AIRestart();
+
+            if (enemy.AIBody[0].IntersectsWith(food))
+            {
+
+                enemy.Grow();
+
+                genRandom();
+
+            }
+
+            enemy.Move(); // ai
+            pictureBox1.Invalidate(); // update picturebox
+
         }
 
         /*
@@ -1100,6 +1244,40 @@ namespace snaketest
                 _eat = new SoundPlayer(Properties.Resources.blank);
                 _powerup = new SoundPlayer(Properties.Resources.blank);
                 _menselect = new SoundPlayer(Properties.Resources.blank);
+            }
+        }
+
+        private void aiEnabled_Click(object sender, EventArgs e)
+        {
+            if(aiEnabled.Text == "AI Enemy - Off")
+            {
+                aiEnabled.Text = "AI Enemy - On";
+                aiEnemy = true;
+                if(!gameOver)
+                    aiDirection.Start();
+                AIRestart();
+            }
+            else
+            {
+                aiEnabled.Text = "AI Enemy - Off";
+                AIRestart();
+                aiEnemy = false;
+                aiDirection.Stop();
+            }
+        }
+
+        private void evilBallOn_Click(object sender, EventArgs e)
+        {
+            if(evilBallOn.Text == "Evil Ball - Off")
+            {
+                evilBall = true;
+                ballRand();
+                evilBallOn.Text = "Evil Ball - On";
+            }
+            else
+            {
+                evilBallOn.Text = "Evil Ball - Off";
+                evilBall = false;
             }
         }
 

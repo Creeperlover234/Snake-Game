@@ -17,8 +17,8 @@ namespace snaketest
         public Direction direction;
         LinearGradientBrush bodyColor = new LinearGradientBrush(new Point(-10, 550), new Point(560, -10), Color.FromArgb(255, 255, 0, 0), Color.FromArgb(255, 0, 0, 255));
         LinearGradientBrush headColor = new LinearGradientBrush(new Point(-10, 550), new Point(560, -10), Color.FromArgb(255, 0, 230, 255), Color.FromArgb(205, 135, 0, 255));
-        private int x = 280;
-        private int y = 280;
+        private int x = 260;
+        private int y = 260;
         private int width = 20;
         private int height = 20;
         

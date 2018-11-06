@@ -80,6 +80,9 @@
             this.boundsLabel = new System.Windows.Forms.Label();
             this.outOfBoundTimer = new System.Windows.Forms.Timer(this.components);
             this.muteButton = new System.Windows.Forms.PictureBox();
+            this.aiDirection = new System.Windows.Forms.Timer(this.components);
+            this.aiEnabled = new System.Windows.Forms.Label();
+            this.evilBallOn = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.bonusPow)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dpPow)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ghostPow)).BeginInit();
@@ -195,7 +198,7 @@
             this.restartButton.AutoSize = true;
             this.restartButton.Cursor = System.Windows.Forms.Cursors.Hand;
             this.restartButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.restartButton.Location = new System.Drawing.Point(557, 323);
+            this.restartButton.Location = new System.Drawing.Point(556, 305);
             this.restartButton.Name = "restartButton";
             this.restartButton.Size = new System.Drawing.Size(103, 31);
             this.restartButton.TabIndex = 15;
@@ -207,7 +210,7 @@
             this.pauseplayButton.AutoSize = true;
             this.pauseplayButton.Cursor = System.Windows.Forms.Cursors.Hand;
             this.pauseplayButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.pauseplayButton.Location = new System.Drawing.Point(681, 323);
+            this.pauseplayButton.Location = new System.Drawing.Point(679, 305);
             this.pauseplayButton.Name = "pauseplayButton";
             this.pauseplayButton.Size = new System.Drawing.Size(91, 31);
             this.pauseplayButton.TabIndex = 16;
@@ -357,7 +360,7 @@
             this.disPowerups.AutoSize = true;
             this.disPowerups.Cursor = System.Windows.Forms.Cursors.Hand;
             this.disPowerups.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.disPowerups.Location = new System.Drawing.Point(559, 303);
+            this.disPowerups.Location = new System.Drawing.Point(559, 368);
             this.disPowerups.Name = "disPowerups";
             this.disPowerups.Size = new System.Drawing.Size(113, 20);
             this.disPowerups.TabIndex = 27;
@@ -505,7 +508,7 @@
             this.boundsLabel.AutoSize = true;
             this.boundsLabel.Cursor = System.Windows.Forms.Cursors.Hand;
             this.boundsLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.boundsLabel.Location = new System.Drawing.Point(683, 303);
+            this.boundsLabel.Location = new System.Drawing.Point(681, 368);
             this.boundsLabel.Name = "boundsLabel";
             this.boundsLabel.Size = new System.Drawing.Size(98, 20);
             this.boundsLabel.TabIndex = 43;
@@ -527,12 +530,43 @@
             this.muteButton.TabStop = false;
             this.muteButton.Click += new System.EventHandler(this.muteButton_Click);
             // 
+            // aiDirection
+            // 
+            this.aiDirection.Interval = 150;
+            this.aiDirection.Tick += new System.EventHandler(this.aiDirection_Tick);
+            // 
+            // aiEnabled
+            // 
+            this.aiEnabled.AutoSize = true;
+            this.aiEnabled.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.aiEnabled.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.aiEnabled.Location = new System.Drawing.Point(559, 404);
+            this.aiEnabled.Name = "aiEnabled";
+            this.aiEnabled.Size = new System.Drawing.Size(113, 20);
+            this.aiEnabled.TabIndex = 45;
+            this.aiEnabled.Text = "AI Enemy - Off";
+            this.aiEnabled.Click += new System.EventHandler(this.aiEnabled_Click);
+            // 
+            // evilBallOn
+            // 
+            this.evilBallOn.AutoSize = true;
+            this.evilBallOn.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.evilBallOn.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.evilBallOn.Location = new System.Drawing.Point(681, 404);
+            this.evilBallOn.Name = "evilBallOn";
+            this.evilBallOn.Size = new System.Drawing.Size(98, 20);
+            this.evilBallOn.TabIndex = 46;
+            this.evilBallOn.Text = "Evil Ball - Off";
+            this.evilBallOn.Click += new System.EventHandler(this.evilBallOn_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.AppWorkspace;
             this.ClientSize = new System.Drawing.Size(784, 561);
+            this.Controls.Add(this.evilBallOn);
+            this.Controls.Add(this.aiEnabled);
             this.Controls.Add(this.muteButton);
             this.Controls.Add(this.boundsLabel);
             this.Controls.Add(this.highScoreLabel);
@@ -642,6 +676,9 @@
         private System.Windows.Forms.Label boundsLabel;
         private System.Windows.Forms.Timer outOfBoundTimer;
         private System.Windows.Forms.PictureBox muteButton;
+        private System.Windows.Forms.Timer aiDirection;
+        private System.Windows.Forms.Label aiEnabled;
+        private System.Windows.Forms.Label evilBallOn;
     }
 }
 
