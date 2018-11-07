@@ -18,10 +18,11 @@ namespace snaketest
     public partial class Form1 : Form
     {
         /*
-         * 4 for loops
+         * (11-6-18)
+         * 2 for loops
          * 2 switch statements
-         * ~13 else if statements
-         * over 800 lines of code
+         * ~30 else if statements
+         * over 1000 lines of code
         */
 
         //rec for items
@@ -144,15 +145,24 @@ namespace snaketest
         {
             InitializeComponent();
 
+            this.Width = 804;
+
 
             //Update Checker
+            /*
+             *
+             * We download info from raw git, translate it to UTF8 and compare it
+             * to currentUpdate. If they're the same, its on the latest build.
+             * If they don't match, we tell the user there is a new update available.
+             * 
+            */
             try
             {
-                byte[] raw = webc.DownloadData("https://raw.githubusercontent.com/Creeperlover234/Snake-Game/master/release");
+                byte[] webData = webc.DownloadData("https://raw.githubusercontent.com/Creeperlover234/Snake-Game/master/release"); // get latest release
 
-                newUpdate = Encoding.UTF8.GetString(raw);
+                newUpdate = Encoding.UTF8.GetString(webData); // translate that boi
 
-                if (newUpdate == currentUpdate)
+                if (newUpdate == currentUpdate) // compare
                 {
                     createdLabel.Text += "(latest build)";
                     this.Text = "Snake (latest build)";
@@ -217,7 +227,7 @@ namespace snaketest
                 highScore = Convert.ToInt32(readFile.ReadLine());
                 readFile.Close();
                 highScoreLabel.Text = "High Score: " + highScore; // update highscore
-            }catch(FileNotFoundException)
+            }catch(FileNotFoundException) // this literally should NEVER happen, but if it does, this will be more useful.
             {
                 MessageBox.Show("Error. File was not found. Please re-run this program.");
             }
@@ -340,8 +350,6 @@ namespace snaketest
                 case Keys.M: // mute button
                     muteButton_Click(sender, e);
                     break;
-                default:
-                    break;
             }
         }
 
@@ -354,6 +362,7 @@ namespace snaketest
 
             if (evilBall)
             {
+                //make the ball bounce
                 if (ballx < 520 && !left && !gameOver)
                 {
                     ballx += speedX;
@@ -391,11 +400,13 @@ namespace snaketest
 
             if (snake.Body[0].IntersectsWith(ball) && !ghostmode)
                 gameOver = true;
-            else if (enemy.AIBody[0].IntersectsWith(ball) && aiEnemy)
+            else if (enemy.AIBody[0].IntersectsWith(ball) && aiEnemy) 
                 AIRestart();
 
             if (aiEnemy)
             {
+                //Really, this is not very hard to understand. Basically, the AI is programmed to go towards the direction of the food.
+                //The AI gets current pos of the food. If AI is below food, move up, if AI is above food, move down, etc.
                 //make the ai actually do stuffs
                 if (foodY < enemy.AIBody[0].Y && enemy.directionAI != Enemy.DirectionAI.Down)
                     enemy.directionAI = Enemy.DirectionAI.Up;
@@ -467,8 +478,8 @@ namespace snaketest
             {
                 if (snake.Body[0].Y > 520 || snake.Body[0].X < 0 || snake.Body[0].Y < 0 || snake.Body[0].X > 520) // if snake goes off screen, end game
                     gameOver = true; //setting this bool to true effectively ends the game.
-                if (enemy.AIBody[0].Y > 520 && aiEnemy || enemy.AIBody[0].X < 0 && aiEnemy || enemy.AIBody[0].Y < 0 && aiEnemy || enemy.AIBody[0].X > 520 && aiEnemy) // if snake goes off screen, end game
-                    AIRestart(); //setting this bool to true effectively ends the game.
+                if (enemy.AIBody[0].Y > 520 && aiEnemy || enemy.AIBody[0].X < 0 && aiEnemy || enemy.AIBody[0].Y < 0 && aiEnemy || enemy.AIBody[0].X > 520 && aiEnemy) // if AI exits screen
+                    AIRestart(); //reset ai
             }
 
 
@@ -482,7 +493,7 @@ namespace snaketest
                 _eat.Play(); // play eat sound
 
 
-                //again, generate random x,y coord for food.
+                //generate random x,y coord for food.
                 genRandom();
 
                 //points to add(powerups)
@@ -547,7 +558,7 @@ namespace snaketest
 
             if (gameOver) // if game is over, do code
             {
-                snake.direction = Snake.Direction.NONE;
+                snake.direction = Snake.Direction.NONE; // stop that darn snake!!!!
                 powerupTimer.Stop(); // stop powerup timer, so powerups dont keep spawning.
                 gmovLabel.Visible = true; // show gameover textbox
                 restartLabel.Visible = true; // show restart textbox
@@ -588,7 +599,7 @@ namespace snaketest
                     changed = true;
                 }
 
-                if (changed)
+                if (changed)//if player beat previous high score, write new score to highScore.txt
                 {
                     try
                     {
@@ -605,11 +616,16 @@ namespace snaketest
 
                 _die.Play();
             }
-
+            //ADD MORE DEBUGZ OPTIONZ PLZZZ. maybe secret options?? Grow, shrink, activate any powerup u wants
             if (showDebug) // for debug menuzzzzzzzzzzzzzzzzzzzzzzz
             {
-                // there is not really a whole lot of purpose to this whole debug menu, can be helpful in finding the root cause to the quick direction
-                //glitch.
+
+                //nice and smoooooooooooooth
+                if (this.Width < 904)
+                    this.Width += 20;
+
+                //plz no bully on poopy code ;(
+
                 label1.Show();
                 label2.Show();
                 label3.Show();
@@ -628,7 +644,7 @@ namespace snaketest
                 label2.Text = "Points: " + points;
                 label3.Text = "Paused: " + paused;
                 label4.Text = "Game Over: " + gameOver;
-                label15.Text = "Powerup Disabled: " + powerupsDisabled;
+                label15.Text = "Powerups: " + powerupsDisabled;
                 label6.Text = "Die: " + die;
                 label7.Text = "Stop: " + stop;
                 label8.Text = "Easy: " + esy;
@@ -636,13 +652,16 @@ namespace snaketest
                 label10.Text = "Hard: " + hard;
                 label11.Text = "Expert: " + exp;
                 label12.Text = "GhostMode: " + ghostmode;
-                label13.Text = "Double points: " + dpon;
+                label13.Text = "x2 Points: " + dpon;
                 label14.Text = "Bonus points: " + bpon;
 
             }
             else if(!showDebug)
             {
-                if (!label1.Visible)// I added this so this timer is not constantly hiding these labels when they're already hidden.
+                //slide it back now y'all
+                if (this.Width > 804)
+                    this.Width -= 20;
+                if (!label1.Visible || this.Width != 804)// we check if width is not equal to 804 cus we dont want text disappering before transition is over.
                     return;
                 label1.Hide();
                 label2.Hide();
@@ -669,6 +688,7 @@ namespace snaketest
          * Game functions -- Restart, and start
         */
 
+        //literally does what it says, resets the ai player
         void AIRestart()
         {
             if (!aiEnemy)
@@ -679,10 +699,10 @@ namespace snaketest
 
         private void CreateFile()
         {
-            if (File.Exists(appData + @"\SnakeGame\highScore.txt"))
+            if (File.Exists(appData + @"\SnakeGame\highScore.txt")) // don't want to create a file that already exists
                 return;
 
-            if(!Directory.Exists(appData + @"\SnakeGame\"))
+            if(!Directory.Exists(appData + @"\SnakeGame\")) //same thing, dont want to create directory that already exists
                 Directory.CreateDirectory(appData + @"\SnakeGame\");
 
             var highScoreTXT = File.Create(appData + @"\SnakeGame\highScore.txt");
@@ -766,24 +786,24 @@ namespace snaketest
 
         void ballRand()
         {
-            if (!evilBall)
+            if (!evilBall) // dont want to generate random x,y if ball is disabled.
                 return;
 
             ballrandx = rand.Next(20, 500);
             ballrandy = rand.Next(20, 500);
 
-            ballx = Math.Round(Math.Ceiling((float)ballrandx / 20) * 20, MidpointRounding.ToEven); // set foodx to the random number
-            bally = Math.Round(Math.Ceiling((float)ballrandy / 20) * 20, MidpointRounding.ToEven); // set foody to the random number
+            ballx = Math.Round(Math.Ceiling((float)ballrandx / 20) * 20, MidpointRounding.ToEven);
+            bally = Math.Round(Math.Ceiling((float)ballrandy / 20) * 20, MidpointRounding.ToEven);
 
         }
 
-        private void firstTime_Tick(object sender, EventArgs e)
+        private void firstTime_Tick(object sender, EventArgs e)//not first timer timer, this runs when you gameover. Updates difficulty text.
         {
             restartLabel.Text = "Press Enter or R to Start.\n       Difficulty: " + difficulty;
         }
 
         private void outOfBoundTimer_Tick(object sender, EventArgs e) // this timer stops players from exiting the gameboard bounds when bounds are off.
-        {
+        { // In other words, NO GETTING OUT OF MAP1111!!!!
             if (snake.Body[0].X > 520)
                 snake.Body[0].X = 0;
             else if (snake.Body[0].X < 0)
@@ -796,20 +816,17 @@ namespace snaketest
 
         private void aiDirection_Tick(object sender, EventArgs e)
         {
-            if (!aiEnemy)
+            if (!aiEnemy) // if enemy ai is disabled STOP
                 return;
 
-            for (int i = 1; i < enemy.AIBody.Length; i++) // get length of snake
-                if (enemy.AIBody[0].IntersectsWith(enemy.AIBody[i])) // if any part of snake collide with eachother, end game
+            for (int i = 1; i < enemy.AIBody.Length; i++)
+                if (enemy.AIBody[0].IntersectsWith(enemy.AIBody[i])) // if ai is big dumb and hits itself, reset it.
                     AIRestart();
 
-            if (enemy.AIBody[0].IntersectsWith(food))
+            if (enemy.AIBody[0].IntersectsWith(food)) // if big boi enemy gets the food before y0u
             {
-
                 enemy.Grow();
-
                 genRandom();
-
             }
 
             enemy.Move(); // ai
@@ -947,6 +964,15 @@ namespace snaketest
         }
         //end bonus point
 
+        /*
+         * 
+         * These timers below serve a very simple purpose. When the player picks up an powerup,
+         * we want to show the player how long the powerup has before it goes away. So, these
+         * timers just subtract 1 from time left every second and once it hits zero, hide label
+         * and stop dis timer.
+         * 
+        */
+        
         private void ghostTime_Tick(object sender, EventArgs e) // countdown timer for the ghost powerup
         {
 
@@ -1126,7 +1152,7 @@ namespace snaketest
 
         /*
          * Buttons: 
-         * Restart, and pause buttons
+         * Restart, and pause buttons, etc
         */
         private void restartButton_Click(object sender, EventArgs e) // restart button
         {
@@ -1249,7 +1275,8 @@ namespace snaketest
 
         private void aiEnabled_Click(object sender, EventArgs e)
         {
-            if(aiEnabled.Text == "AI Enemy - Off")
+            _menselect.Play();
+            if (aiEnabled.Text == "AI Enemy - Off")
             {
                 aiEnabled.Text = "AI Enemy - On";
                 aiEnemy = true;
@@ -1268,7 +1295,8 @@ namespace snaketest
 
         private void evilBallOn_Click(object sender, EventArgs e)
         {
-            if(evilBallOn.Text == "Evil Ball - Off")
+            _menselect.Play();
+            if (evilBallOn.Text == "Evil Ball - Off")
             {
                 evilBall = true;
                 ballRand();
