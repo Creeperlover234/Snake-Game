@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Timers;
 
 namespace snaketest
 {
     class Snake
     {
-        public Rectangle[] Body; // body of snake, needs to be array so we can add to it.
+        public Rectangle[] Body; // body of snake, needs to be array so we can add to it. (array)
         int speed = 20; // default speed of snake
         public enum Direction {Up,Down,Left,Right,NONE};
         public Direction direction;
@@ -46,18 +42,28 @@ namespace snaketest
 
         public void Draw(Graphics g)
         {
-            for (int i = Body.Length - 1; i > 0; i--)
+            for (int i = Body.Length - 1; i > 0; i--) // da body
                 g.FillEllipse(bodyColor, Body[i]); // MOAR CIRCLEZZZZZ
 
-            g.FillEllipse(headColor, Body[0]); // CIRCLES
+            g.FillEllipse(headColor, Body[0]); // CIRCLES (head)
 
         }
 
         public void Grow() // creates new rectangle to snake array, in essence, the snake 'grows'
         {
-            List<Rectangle> bodyAdd = Body.ToList(); // we do this to make life easier ;)
+            List<Rectangle> bodyAdd = Body.ToList();
+            bodyAdd.Add(new Rectangle(Body[Body.Length - 1].X, Body[Body.Length - 1].Y, width, height)); // add rectangle to list
             bodyAdd.Add(new Rectangle(Body[Body.Length - 1].X, Body[Body.Length - 1].Y, width, height)); // add rectangle to list
             Body = bodyAdd.ToArray();
+        }
+
+        public void Shrink()
+        {
+            if (Body.Length < 2)
+                return;
+            List<Rectangle> bodyRemove = Body.ToList();
+            bodyRemove.Remove(Body[0]);
+            Body = bodyRemove.ToArray();
         }
 
         public void Move()

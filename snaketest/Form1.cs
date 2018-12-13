@@ -1,22 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Input;
 using System.Media;
-using System.Net;
-using System.IO;
-using System.Diagnostics;
+using MaterialSkin;
+using MaterialSkin.Controls;
+using System.Threading;
 
 namespace snaketest
 {
-    public partial class Form1 : Form
+    public partial class Form1 : MaterialForm //inherit materialform rather than default windows form
     {
+
         /*
          * (11-6-18)
          * 2 for loops
@@ -25,12 +19,15 @@ namespace snaketest
          * over 1000 lines of code
         */
 
+        #region Objects, Variables
+        
         //rec for items
-        Rectangle ball = new Rectangle();
-        Rectangle food = new Rectangle(); // food/apple
-        Rectangle ghost = new Rectangle(); // ghost powerup
-        Rectangle dp = new Rectangle(); // double point powerup
-        Rectangle bonus = new Rectangle(); // bonus point powerup
+        private Rectangle ball = new Rectangle(); // ball
+        private Rectangle clock = new Rectangle(); // slowdown powerup
+        private Rectangle food = new Rectangle(); // food/apple
+        private Rectangle ghost = new Rectangle(); // ghost powerup
+        private Rectangle dp = new Rectangle(); // double point powerup
+        private Rectangle bonus = new Rectangle(); // bonus point powerup
         //end
 
         //player
@@ -42,90 +39,96 @@ namespace snaketest
         //end
 
         //food
-        double foodX; // food X coordinate
-        double foodY; // food Y coordinate
-        int rand1; // randnum X for food
-        int rand2; // randnum Y for food
+        private double foodX; // food X coordinate
+        private double foodY; // food Y coordinate
         //end
 
         //ball
-        double ballx = 50;
-        double bally = 50;
-        bool left = false;
-        bool bottom = false;
-        int speedX = 5;
-        int speedY = 8;
-        int ballrandx;
-        int ballrandy;
+        private double ballx = 50;
+        private double bally = 50;
+        private bool left = false;
+        private bool bottom = false;
+        private int speedX = 10;
+        private int speedY = 13;
 
         //game stuff
-        string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData); // appdata location
-        WebClient webc = new WebClient();
-        int points; // the points for the game
-        bool paused = false; // checks if game is paused
-        bool powerupsDisabled = false; // check if player disabled powerups
-        static Random rand = new Random();
-        bool gameOver = false; //gamover
-        bool die = false; // we need this to play death sound
-        bool stop = false; // also same for this
-        bool showDebug = false; // show debug menu
-        bool firstStart = true; // this isnt even used to check if first start anymore, but is needed.
-        int lastScore = 0;
-        int highScore = 0; 
-        bool bounds = true; // disable bound/enable
-        string difficulty = "Easy"; // default difficulty is easy.
-        string currentUpdate = "110618dr7";
-        string newUpdate;
-        bool changedMute = false;
-        bool aiEnemy = false;
-        bool evilBall = false;
-        SoundPlayer _menselect; // menu select
-        SoundPlayer _die; // death sound
-        SoundPlayer _eat; // eat sound
-        SoundPlayer _powerup; // powerup sound
+        private hsFile file = new hsFile(); // file class
+        private UpdateCheck uc = new UpdateCheck(); // update checker
+        private Animations am = new Animations(); // Animation class
+        private RandomXY genRand = new RandomXY(); // Random xy cord
+        private int points; // the points for the game
+        private bool paused = false; // checks if game is paused
+        private bool powerupsDisabled = false; // check if player disabled powerups
+        private static Random rand = new Random();
+        private bool gameOver = false; //gameover
+        private bool die = false; // we need this to play death sound
+        private bool stop = false; // also same for this
+        private bool showDebug = false; // show debug menu
+        private bool firstStart = true; // this isnt even used to check if first start anymore, but is needed.
+        private int lastScore = 0;
+        private bool latest = false; // set this to true if we are running the latest version
+        private int highScore = 0; // highscore for game, we set this when we run the game
+        private bool bounds = true; // disable bound/enable
+        private string difficulty = "Normal"; // default difficulty is easy.
+        private bool changedMute = false; // for mute button
+        private bool aiEnemy = false; // enable/disable enemy snake
+        private bool evilBall = false; // enable/disable ball
+        private bool fullScreen = false; // enable/disable fullscreen mode
+        private int col;
+        DateTime _lastCheckTime = DateTime.Now;
+        long _frameCount = 0;
+        private Pen pen = new Pen(Color.FromArgb(255, 0, 0, 255));
+        private SoundPlayer _menselect; // menu select
+        private SoundPlayer _die; // death sound
+        private SoundPlayer _eat; // eat sound
+        private SoundPlayer _powerup; // powerup sound
         //end
 
         //difficulty
-        bool esy = true;
-        bool norm = false;
-        bool hard = false;
-        bool exp = false;
+        private bool esy = false;
+        private bool norm = true;
+        private bool hard = false;
+        private bool exp = false;
         //end
 
         //ghost powerup
-        bool ghostmode = false;
-        double randgx;
-        double randgy;
-        double gx = 999;
-        double gy;
-        int formgx = 999;
-        int formgy;
-        int timeLeftG;
+        private bool ghostmode = false;
+        private double gx = 999;
+        private double gy;
+        private int formgx = 999;
+        private int formgy;
+        private int timeLeftG;
+        //end
+
+        //slowdown powerup
+        private double clockx = 999;
+        private double clocky;
+        private bool clockon = false;
+        private int formclockx = 999;
+        private int formclocky;
+        private int timeLeftSD;
         //end
 
         //double points
-        double randdpx;
-        double randdpy;
-        double dpx = 999;
-        double dpy;
-        bool dpon = false;
-        int formdpx = 999;
-        int formdpy;
-        int timeLeftDP;
+        private double dpx = 999;
+        private double dpy;
+        private bool dpon = false;
+        private int formdpx = 999;
+        private int formdpy;
+        private int timeLeftDP;
         //end
 
         //bonus
-        int bonusrx;
-        int bonusry;
-        int bonusformx = 999;
-        int bonusformy;
-        double bonusx = 999;
-        double bonusy;
-        bool bpon = false;
-        int timeLeftBP;
+        private int bonusformx = 999;
+        private int bonusformy;
+        private double bonusx = 999;
+        private double bonusy;
+        private bool bpon = false;
+        private int timeLeftBP;
         //end
-        
 
+        #endregion
+        
         /*
          * 
          * (Some of the stuff not commented/explained was either because it is easy to understand or because I was to lazy to explain it.)
@@ -140,51 +143,69 @@ namespace snaketest
          * A possible fix may just to be to almost completely rewrite direction function in Snake.cs
          * 
         */
-        
+
+        #region Main Startup
+
         public Form1()
         {
             InitializeComponent();
 
-            this.Width = 804;
+            //this is sum important stuffz to get the custom form to work.
+            MaterialSkinManager materialSkinManager = MaterialSkinManager.Instance;
+            materialSkinManager.AddFormToManage(this);
+            materialSkinManager.Theme = MaterialSkinManager.Themes.DARK;
+            materialSkinManager.ColorScheme = new ColorScheme(Primary.Grey900, Primary.Grey900, Primary.Grey900, 0, TextShade.WHITE);
+            //end
 
+            this.Width = 784; // set width to 784
+            pictureBox1.Left = 12; // move gameboard over a bit, cus im lazy
 
-            //Update Checker
-            /*
-             *
-             * We download info from raw git, translate it to UTF8 and compare it
-             * to currentUpdate. If they're the same, its on the latest build.
-             * If they don't match, we tell the user there is a new update available.
-             * 
-            */
-            try
+            //check for update
+            UpdateCheck uc = new UpdateCheck();
+
+            uc.CheckUpdate();
+
+            latest = uc.isLatest();
+
+            if (uc.isLatest()) // if we're running latest version
             {
-                byte[] webData = webc.DownloadData("https://raw.githubusercontent.com/Creeperlover234/Snake-Game/master/release"); // get latest release
-
-                newUpdate = Encoding.UTF8.GetString(webData); // translate that boi
-
-                if (newUpdate == currentUpdate) // compare
-                {
-                    createdLabel.Text += "(latest build)";
-                    this.Text = "Snake (latest build)";
-                }
-                else
-                {
-                    DialogResult UpdateYesNo = MessageBox.Show("There is a newer version of this application.\nWould you like to update?", "New Update " + newUpdate, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk);
-                    if (UpdateYesNo == DialogResult.Yes)
-                    {
-                        Process.Start("https://github.com/Creeperlover234/Snake-Game/releases");
-                    }
-                    else { }
-
-                    createdLabel.Text += "(old build)";
-                    this.Text = "Snake (old build)";
-                    createdLabel.Left += 10;
-                }
-            }catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
+                createdLabel.Text += "(latest build)";
+                this.Text = "Snake (latest build)";
             }
-            //End
+            else // if we're on an outdated version
+            {
+                createdLabel.Text += "(old build)";
+                this.Text = "Snake (old build)";
+                createdLabel.Left += 10;
+            }
+            //end
+
+            //idrk something fancy.
+            col = rand.Next(1, 7);
+            switch (col)
+            {
+                case 1:
+                    pen = new Pen(Color.FromArgb(255, 0, 0, 255));
+                    break;
+                case 2:
+                    pen = new Pen(Color.FromArgb(255, 0, 255, 0));
+                    break;
+                case 3:
+                    pen = new Pen(Color.FromArgb(255, 255, 0, 0));
+                    break;
+                case 4:
+                    pen = new Pen(Color.FromArgb(255, 240, 65, 245));
+                    break;
+                case 5:
+                    pen = new Pen(Color.FromArgb(255, 245, 240, 65));
+                    break;
+                case 6:
+                    pen = new Pen(Color.FromArgb(255, 0, 255, 255));
+                    break;
+                default:
+                    pen = new Pen(Color.FromArgb(255, 66, 244, 158));
+                    break;
+            }
 
             //below, we are initializing the sounds
             _die = new SoundPlayer(Properties.Resources.die);
@@ -193,21 +214,23 @@ namespace snaketest
             _menselect = new SoundPlayer(Properties.Resources.menselect);
             //end
 
-            muteButton.Image = Properties.Resources.unMute;
+            muteButton.Image = Properties.Resources.unMute; // set pic to unmute pic
 
             pictureBox1.BackColor = Color.Black; // set background of picturebox to black
 
-            difEasy.Font = new Font(difEasy.Font.Name, difEasy.Font.SizeInPoints, FontStyle.Underline); // underline easy(default dif)
+            difNorm.Font = new Font(difEasy.Font.Name, difEasy.Font.SizeInPoints, FontStyle.Underline); // underline normal(default dif)
 
             snake = new Snake(); //create snake boi
             enemy = new Enemy(); // ai
 
             //set gameover to true on startup for a welcome message
+            animationTimer.Start(); // needs the animations
             firstTime.Start(); // we start this timer to update current difficulty on startup, this timer is not used at all after startup.
             gameOver = true; // so gameover stuff does its stuff
             gmovLabel.Text = "  Welcome!";
             snake.Body[0].X = 777; //set snake off screen
-            enemy.AIBody[0].X = 999;
+            enemy.AIBody[0].X = 999; // set ai off screen
+            ballx = 999; // set ball off screen
             foodX = 899; // set food off-screen
             powerupTimer.Stop(); // stop powerup timer, so powerups dont keep spawning.
             gmovLabel.Visible = true; // show gameover textbox
@@ -217,41 +240,43 @@ namespace snaketest
             pauseplayButton.Enabled = false;
             restartButton.Enabled = false;
 
-            //Create highscore and snake folder if necessary
-            CreateFile();
+            directionTimer.Interval = 70;
+            foodEatTimer.Interval = 70;
+            outOfBoundTimer.Interval = 80;
+            
+            file.createFile(); // create highscore and snake folder if necessary
+            file.setHighScore(); // reads high score from file
+            highScore = file.getHS(); // set highscore in game to that
 
-
-            try
-            {
-                StreamReader readFile = new StreamReader(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SnakeGame\highScore.txt");
-                highScore = Convert.ToInt32(readFile.ReadLine());
-                readFile.Close();
-                highScoreLabel.Text = "High Score: " + highScore; // update highscore
-            }catch(FileNotFoundException) // this literally should NEVER happen, but if it does, this will be more useful.
-            {
-                MessageBox.Show("Error. File was not found. Please re-run this program.");
-            }
-            catch(Exception ex){
-                MessageBox.Show("Error: " + ex.Message + "\nPlease reset highScore.txt\nLocated in %appdata%\\SnakeGame\\");
-                highScore = 0;
-            }
+            highScoreLabel.Text = "High Score: " + highScore; // update highscore
 
         }
-        
-        private void Form1_Load(object sender, EventArgs e)
+
+        private void Form1_Paint(object sender, PaintEventArgs e)
         {
         }
+
+        #endregion
+
+        #region Gameboard
 
         //This picturebox is the gameboard, this is what shows all the powerups and the snake.
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
-            enemy.Draw(e.Graphics);
+            enemy.Draw(e.Graphics); //we gots to draw da enemy
             snake.Draw(e.Graphics); //Draw snake on screen
 
-            //evil ball
-            e.Graphics.FillEllipse(Brushes.Tomato,  ball.X = (int)ballx, ball.Y = (int)bally, ball.Width = 15, ball.Height = 15);
+            //draw red border
+            e.Graphics.DrawLine(pen, 0, 0, 540, 0);
+            e.Graphics.DrawLine(pen, 0, 540, 0, 0);
+            e.Graphics.DrawLine(pen, 539, 0, 539, 539);
+            e.Graphics.DrawLine(pen, 0, 539, 539, 539);
+            //end
 
-            // Below we are creating Bitmaps for the powerups/items, this makes it extremely easy to manipulate the images.
+            //evil ball
+            e.Graphics.FillEllipse(Brushes.Tomato, ball.X = (int)ballx, ball.Y = (int)bally, ball.Width = 15, ball.Height = 15);
+
+            // Draw images. Obviously way better than a picbox, can minipulate size, pos, etc.
 
             //apple
             e.Graphics.DrawImage(new Bitmap(Properties.Resources.snakefood), food.X = (int)foodX, food.Y = (int)foodY, food.Width = 20, food.Height = 20);
@@ -261,7 +286,13 @@ namespace snaketest
             e.Graphics.DrawImage(new Bitmap(Properties.Resources.doublepoints), dp.X = (int)dpx, dp.Y = (int)dpy, dp.Width = 20, dp.Height = 20);
             //bonus points
             e.Graphics.DrawImage(new Bitmap(Properties.Resources.bonuspoints), bonus.X = (int)bonusx, bonus.Y = (int)bonusy, bonus.Width = 20, bonus.Height = 20);
+            //slowdown time
+            e.Graphics.DrawImage(new Bitmap(Properties.Resources.slowdowntime), clock.X = (int)clockx, clock.Y = (int)clocky, clock.Width = 20, clock.Height = 20);
         }
+
+        #endregion
+
+        #region Direction Stuff
 
         private void directionTimer_Tick(object sender, EventArgs e)
         {
@@ -276,8 +307,8 @@ namespace snaketest
                 case Keys.Enter: // if gameover, pressing enter will restart the game.
                     if (gameOver)
                     {
-                        if (gmovLabel.Text != "Game Over")
-                            gmovLabel.Text = "Game Over";
+                        if (gmovLabel.Text != " Game Over")
+                            gmovLabel.Text = " Game Over";
 
                         lastScore = points;
                         Restart(); // restart game
@@ -285,8 +316,6 @@ namespace snaketest
                         stop = false;
                         foodEatTimer.Start(); // start food timer
                         directionTimer.Start(); // start direction timer
-                        if(aiEnemy)
-                            aiDirection.Start();
                         powerupTimer.Start(); // start powerup timers
                         gameOver = false; // set gamover to false
                         gmovLabel.Visible = false; // remove gameover text
@@ -316,7 +345,7 @@ namespace snaketest
                         snake.direction = Snake.Direction.Right;
                     break;
                 case Keys.Escape: // pause
-                    if(!gameOver)
+                    if (!gameOver)
                         this.pauseplayButton_Click(sender, e); //simulate button press
                     break;
                 case Keys.R: // restart
@@ -326,14 +355,36 @@ namespace snaketest
                         SendKeys.Send("{Enter}"); // basically makes form think player pressed enter.
                     break;
                 case Keys.F2: // debug mode
-                    if (!showDebug)
+                    if (!showDebug && !fullScreen && this.Width == 784)
                         showDebug = true;
-                    else if (showDebug)
+                    else if (showDebug && this.Width > 784)
                         showDebug = false;
                     break;
                 case Keys.Add: // snake grow for debug
                     if (showDebug)
                         snake.Grow();
+                    break;
+                case Keys.Subtract: // shrink
+                    if (showDebug)
+                        snake.Shrink();
+                    break;
+                case Keys.NumPad9: // cheatz
+                    if (!ghostmode && showDebug)
+                        ghostmode = true;
+                    else if (ghostmode && showDebug)
+                        ghostmode = false;
+                    break;
+                case Keys.NumPad8: // more cheats
+                    if (!dpon && showDebug)
+                        dpon = true;
+                    else if (dpon && showDebug)
+                        dpon = false;
+                    break;
+                case Keys.NumPad7: // cheats
+                    if (!bpon && showDebug)
+                        bpon = true;
+                    else if (bpon && showDebug)
+                        bpon = false;
                     break;
                 case Keys.D1: // set dif to easy
                     difEasy_Click(sender, e);
@@ -350,8 +401,18 @@ namespace snaketest
                 case Keys.M: // mute button
                     muteButton_Click(sender, e);
                     break;
+                case Keys.F4: // enable fullscreen
+                    if (fullScreen)
+                        fullScreen = false;
+                    else if (!showDebug && this.Width == 784)
+                        fullScreen = true;
+                    break;
             }
         }
+
+        #endregion
+
+        #region Game Timer
 
         private void foodEatTimer_Tick(object sender, EventArgs e) // if you can't tell, this timer is used for a lot more than just food.
         {
@@ -360,7 +421,11 @@ namespace snaketest
                 if (snake.Body[0].IntersectsWith(snake.Body[i]) && !ghostmode) // if any part of snake collide with eachother, end game
                     gameOver = true;
 
-            if (evilBall)
+            for (int i = 1; i < snake.Body.Length; i++) // we dont want the apple or any powerups to spawn inside of the snake, so we do this to avoid that.
+                if (food.IntersectsWith(snake.Body[i]))
+                    genRandom(ref foodX, ref foodY);
+
+            if (evilBall) // maybe move to seperate class?
             {
                 //make the ball bounce
                 if (ballx < 520 && !left && !gameOver)
@@ -393,17 +458,18 @@ namespace snaketest
                     if (bally < 0)
                         bottom = false;
                 }
-            }else
+            }
+            else
             {
                 ballx = 999;
             }
 
             if (snake.Body[0].IntersectsWith(ball) && !ghostmode)
                 gameOver = true;
-            else if (enemy.AIBody[0].IntersectsWith(ball) && aiEnemy) 
+            else if (enemy.AIBody[0].IntersectsWith(ball) && aiEnemy)
                 AIRestart();
 
-            if (aiEnemy)
+            if (aiEnemy)// may be hard to move to sep class just cus it directly checks foodx and foody
             {
                 //Really, this is not very hard to understand. Basically, the AI is programmed to go towards the direction of the food.
                 //The AI gets current pos of the food. If AI is below food, move up, if AI is above food, move down, etc.
@@ -431,7 +497,6 @@ namespace snaketest
                 enemy.directionAI = Enemy.DirectionAI.NONE;
             }
 
-
             if (!bounds) //if player disabled bounds
             {
                 /*
@@ -446,25 +511,13 @@ namespace snaketest
                 */
 
                 if (snake.Body[0].X < 0) // left side
-                {
-                    snake.Body[0].X = 520;
-                    snake.Body[0].X += 20;
-                }
+                    snake.Body[0].X = 540;
                 else if (snake.Body[0].X > 520) // right side
-                {
-                    snake.Body[0].X = 0;
-                    snake.Body[0].X -= 20;
-                }
+                    snake.Body[0].X = -20;
                 else if (snake.Body[0].Y < 0) // top
-                {
-                    snake.Body[0].Y = 520;
-                    snake.Body[0].Y += 20;
-                }
+                    snake.Body[0].Y = 540;
                 else if (snake.Body[0].Y > 520) // bottom
-                {
-                    snake.Body[0].Y = 0;
-                    snake.Body[0].Y -= 20;
-                }
+                    snake.Body[0].Y = -20;
 
                 //the point of the stuff below is to check if the player is off-screen for more than 110ms, if he is push him back on screen
                 //this stops players from getting out of bounds and gives the teleportation feel a really nice smooth feeling to it.
@@ -492,9 +545,8 @@ namespace snaketest
             {
                 _eat.Play(); // play eat sound
 
-
                 //generate random x,y coord for food.
-                genRandom();
+                genRandom(ref foodX, ref foodY);
 
                 //points to add(powerups)
                 if (dpon) // if we have double points
@@ -512,7 +564,8 @@ namespace snaketest
                 }
 
                 snake.Grow();
-            } else if (snake.Body[0].IntersectsWith(ghost))
+            }
+            else if (snake.Body[0].IntersectsWith(ghost)) // eat ghost powerup
             {
                 _powerup.Play();
                 ghostTimer.Stop(); // stop ghosttimer if started , should never happen
@@ -526,7 +579,8 @@ namespace snaketest
                 ghostPow.Invalidate(); // update pic box
                 ghostTime.Start(); // start countdown timer.
                 ghostTimer.Start(); // start ghost timer
-            } else if (snake.Body[0].IntersectsWith(dp))
+            }
+            else if (snake.Body[0].IntersectsWith(dp)) // eat double points
             {
                 _powerup.Play();
                 doublepointTimer.Stop(); // stop double point timer if started, should never happen.
@@ -540,7 +594,8 @@ namespace snaketest
                 formdpy = 3;
                 dpPow.Invalidate();
                 doublepointTimer.Start();
-            } else if (snake.Body[0].IntersectsWith(bonus))
+            }
+            else if (snake.Body[0].IntersectsWith(bonus)) // eat bonus points
             {
                 _powerup.Play();
                 bonuspointTimer.Stop();
@@ -554,6 +609,39 @@ namespace snaketest
                 bonusformy = 3;
                 bonusPow.Invalidate();
                 bonuspointTimer.Start();
+            }else if (snake.Body[0].IntersectsWith(clock)) // eat slowdown powerup
+            {
+                _powerup.Play();
+                slowdownTimer.Stop();
+                clockon = true;
+                timeLeftSD = 10;
+                slowdownTime.Start();
+                sdLabel.Show();
+                sdLabel.Text = "10 sec.";
+                clockx = 999;
+                formclockx = 3;
+                formclocky = 3;
+                slowdownPow.Invalidate();
+                slowdownTimer.Start();
+                if (difficulty == "Easy")
+                {
+                    directionTimer.Interval = 120;
+                    foodEatTimer.Interval = 120;
+                }else if(difficulty == "Normal")
+                {
+                    directionTimer.Interval = 100;
+                    foodEatTimer.Interval = 100;
+                }
+                else if (difficulty == "Hard")
+                {
+                    directionTimer.Interval = 90;
+                    foodEatTimer.Interval = 90;
+                }
+                else if (difficulty == "Expert")
+                {
+                    directionTimer.Interval = 70;
+                    foodEatTimer.Interval = 70;
+                }
             }
 
             if (gameOver) // if game is over, do code
@@ -575,11 +663,29 @@ namespace snaketest
                 bpTimeLabel.Hide();
                 dpTime.Stop();
                 dpTimeLabel.Hide();
+                sdLabel.Hide();
+                slowdownTime.Stop();
+                slowdownTimer.Stop();
                 ghostTime.Stop();
                 gTimeLabel.Hide();
-                //disable difficulty buttons and restart/pause buttons.
+                //disable restart/pause buttons.
                 pauseplayButton.Enabled = false;
                 restartButton.Enabled = false;
+
+                //move all items off screen
+                gx = 999;
+                dpx = 999;
+                bonusx = 999;
+                clockx = 999;
+                bonusformx = 999;
+                formgx = 999;
+                formdpx = 999;
+                formclockx = 999;
+                //update all pictureboxes
+                ghostPow.Invalidate();
+                dpPow.Invalidate();
+                bonusPow.Invalidate();
+                slowdownPow.Invalidate();
             }
             else
             {
@@ -591,7 +697,7 @@ namespace snaketest
             if (die)
             {
                 bool changed = false;
-                die = false;
+                die = false; // set to false so we arent repeadetly saving file.
 
                 if (points > highScore) // if your score was higher than the high score, set current score to high score.
                 {
@@ -601,36 +707,23 @@ namespace snaketest
 
                 if (changed)//if player beat previous high score, write new score to highScore.txt
                 {
-                    try
-                    {
-                        StreamWriter writeFile = new StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SnakeGame\highScore.txt");
-                        writeFile.Write(highScore);
-                        changed = false;
-                        writeFile.Close();
-                    }
-                    catch (Exception error)
-                    {
-                        MessageBox.Show(error.Message);
-                    }
+                    file.setHS(highScore);
+                    file.saveFile();
                 }
 
                 _die.Play();
             }
-            //ADD MORE DEBUGZ OPTIONZ PLZZZ. maybe secret options?? Grow, shrink, activate any powerup u wants
-            if (showDebug) // for debug menuzzzzzzzzzzzzzzzzzzzzzzz
+
+            if (showDebug) // for debug menuzzzz
             {
 
-                //nice and smoooooooooooooth
-                if (this.Width < 904)
-                    this.Width += 20;
-
                 //plz no bully on poopy code ;(
-
+                OnMapUpdated();
                 label1.Show();
                 label2.Show();
                 label3.Show();
                 label4.Show();
-                label15.Show();
+                label5.Show();
                 label6.Show();
                 label7.Show();
                 label8.Show();
@@ -640,13 +733,13 @@ namespace snaketest
                 label12.Show();
                 label13.Show();
                 label14.Show();
-                label1.Text = "Direction: " + snake.direction;
+                label1.Text = "FPS: " + Convert.ToInt32(getFps());
                 label2.Text = "Points: " + points;
                 label3.Text = "Paused: " + paused;
                 label4.Text = "Game Over: " + gameOver;
-                label15.Text = "Powerups: " + powerupsDisabled;
+                label5.Text = "Powerups: " + powerupsDisabled;
                 label6.Text = "Die: " + die;
-                label7.Text = "Stop: " + stop;
+                label7.Text = "Direction: " + snake.direction;
                 label8.Text = "Easy: " + esy;
                 label9.Text = "Norm: " + norm;
                 label10.Text = "Hard: " + hard;
@@ -654,60 +747,26 @@ namespace snaketest
                 label12.Text = "GhostMode: " + ghostmode;
                 label13.Text = "x2 Points: " + dpon;
                 label14.Text = "Bonus points: " + bpon;
-
-            }
-            else if(!showDebug)
-            {
-                //slide it back now y'all
-                if (this.Width > 804)
-                    this.Width -= 20;
-                if (!label1.Visible || this.Width != 804)// we check if width is not equal to 804 cus we dont want text disappering before transition is over.
-                    return;
-                label1.Hide();
-                label2.Hide();
-                label3.Hide();
-                label4.Hide();
-                label15.Hide();
-                label6.Hide();
-                label7.Hide();
-                label8.Hide();
-                label9.Hide();
-                label10.Hide();
-                label11.Hide();
-                label12.Hide();
-                label13.Hide();
-                label14.Hide();
             }
 
-            
+
         }
 
+        #endregion
 
+        #region Game Functions
 
         /*
-         * Game functions -- Restart, and start
+         * Game functions -- Restart, start, etc.
         */
 
         //literally does what it says, resets the ai player
-        void AIRestart()
+        private void AIRestart()
         {
             if (!aiEnemy)
                 return;
             enemy = new Enemy();
             enemy.directionAI = Enemy.DirectionAI.Right;
-        }
-
-        private void CreateFile()
-        {
-            if (File.Exists(appData + @"\SnakeGame\highScore.txt")) // don't want to create a file that already exists
-                return;
-
-            if(!Directory.Exists(appData + @"\SnakeGame\")) //same thing, dont want to create directory that already exists
-                Directory.CreateDirectory(appData + @"\SnakeGame\");
-
-            var highScoreTXT = File.Create(appData + @"\SnakeGame\highScore.txt");
-
-            highScoreTXT.Close();
         }
 
         //in short, this function stops all timers and disables all powerups
@@ -717,11 +776,13 @@ namespace snaketest
             bpTimeLabel.Hide();
             dpTimeLabel.Hide();
             gTimeLabel.Hide();
+            sdLabel.Hide();
 
             //update all pictureboxes
             ghostPow.Invalidate();
             dpPow.Invalidate();
             bonusPow.Invalidate();
+            slowdownPow.Invalidate();
 
             //reset snake
             snake = new Snake();
@@ -729,17 +790,22 @@ namespace snaketest
             //reset AI
             AIRestart();
 
+            if (aiEnemy)
+                aiDirection.Start();
+
             //generate random x,y for apple.
-            genRandom();
-            ballRand();
+            genRandom(ref foodX, ref foodY);
+            if (evilBall) // dont want to generate random x,y if ball is disabled.
+                genRandom(ref ballx, ref bally);
 
             //disable all timers
             foodEatTimer.Stop();
+            slowdownTimer.Stop();
             directionTimer.Stop();
-            aiDirection.Stop();
             powerupTimer.Stop();
             outOfBoundTimer.Stop();
             dpTime.Stop();
+            slowdownTime.Stop();
             ghostTime.Stop();
             ghostTimer.Stop();
             doublepointTimer.Stop();
@@ -752,6 +818,32 @@ namespace snaketest
             dpon = false;
             bpon = false;
 
+            //reset timer intervals if player dies while slowdown powerup is active
+            if (clockon)
+            {
+                if (difficulty == "Easy")
+                {
+                    directionTimer.Interval = 100;
+                    foodEatTimer.Interval = 100;
+                }
+                else if (difficulty == "Normal")
+                {
+                    directionTimer.Interval = 70;
+                    foodEatTimer.Interval = 70;
+                }
+                else if (difficulty == "Hard")
+                {
+                    directionTimer.Interval = 60;
+                    foodEatTimer.Interval = 60;
+                }
+                else if (difficulty == "Expert")
+                {
+                    directionTimer.Interval = 40;
+                    foodEatTimer.Interval = 40;
+                }
+                clockon = false;
+            }
+
             //set points to 0
             points = 0;
 
@@ -759,9 +851,11 @@ namespace snaketest
             gx = 999;
             dpx = 999;
             bonusx = 999;
+            clockx = 999;
             bonusformx = 999;
             formgx = 999;
             formdpx = 999;
+            formclockx = 999;
         }
 
         private void Start()
@@ -774,30 +868,14 @@ namespace snaketest
             gmovLabel.Visible = false;
             restartLabel.Visible = false;
         }
-        
-        void genRandom() // move apple to random spot on gameboard
-        {
-            rand1 = rand.Next(20, 500); // generate random X coord
-            rand2 = rand.Next(20, 500); // generate random Y coord
 
-            foodX = Math.Round(Math.Ceiling((float)rand1 / 20) * 20, MidpointRounding.ToEven); // set foodx to the random number
-            foodY = Math.Round(Math.Ceiling((float)rand2 / 20) * 20, MidpointRounding.ToEven); // set foody to the random number
+        private void genRandom(ref double x, ref double y) // generate a random x,y coordinate for specified doubles
+        {
+            x = genRand.RandX(rand);
+            y = genRand.RandX(rand);
         }
 
-        void ballRand()
-        {
-            if (!evilBall) // dont want to generate random x,y if ball is disabled.
-                return;
-
-            ballrandx = rand.Next(20, 500);
-            ballrandy = rand.Next(20, 500);
-
-            ballx = Math.Round(Math.Ceiling((float)ballrandx / 20) * 20, MidpointRounding.ToEven);
-            bally = Math.Round(Math.Ceiling((float)ballrandy / 20) * 20, MidpointRounding.ToEven);
-
-        }
-
-        private void firstTime_Tick(object sender, EventArgs e)//not first timer timer, this runs when you gameover. Updates difficulty text.
+        private void firstTime_Tick(object sender, EventArgs e)//not first time timer, this runs when you gameover. Updates difficulty text.
         {
             restartLabel.Text = "Press Enter or R to Start.\n       Difficulty: " + difficulty;
         }
@@ -823,23 +901,72 @@ namespace snaketest
                 if (enemy.AIBody[0].IntersectsWith(enemy.AIBody[i])) // if ai is big dumb and hits itself, reset it.
                     AIRestart();
 
-            if (enemy.AIBody[0].IntersectsWith(food)) // if big boi enemy gets the food before y0u
+            if (enemy.AIBody[0].IntersectsWith(food)) // if enemy gets the food before y0u lul
             {
                 enemy.Grow();
-                genRandom();
+                genRandom(ref foodX, ref foodY);
             }
 
             enemy.Move(); // ai
             pictureBox1.Invalidate(); // update picturebox
 
         }
+        private void animationTimer_Tick(object sender, EventArgs e)//needz da fancy swoosh animations
+        {
+            //fix start
+            if (this.Width < 554 && !showDebug && !fullScreen)
+                this.Width = 784;
+            else if (this.Width < 554 && !showDebug && fullScreen)
+                this.Width = 554;
+            else if (this.Width < 554 && showDebug && !fullScreen)
+                this.Width = 884;
+            //fix end
+
+            if (showDebug)
+                this.Width = am.PerformDebugAnimation(this.Width, true);
+            else if (!showDebug)
+                this.Width = am.PerformDebugAnimation(this.Width, false);
+
+
+            if (fullScreen && this.Width <= 784)//donezo
+            {
+                am.PerformFullscreenAnimation(am.FormWidth(this.Width), am.GameBoardWidth(pictureBox1.Left), am.GameOvLabel(gmovLabel.Left), true);
+
+                this.Width = am.getFW();
+                this.pictureBox1.Left = am.getGBW();
+                this.gmovLabel.Left = am.getGmovLabel();
+            }
+            if (!fullScreen && this.Width < 784)
+            {
+                am.PerformFullscreenAnimation(am.FormWidth(this.Width), am.GameBoardWidth(pictureBox1.Left), am.GameOvLabel(gmovLabel.Left), false);
+
+                this.Width = am.getFW();
+                this.pictureBox1.Left = am.getGBW();
+                this.gmovLabel.Left = am.getGmovLabel();
+            }
+        }
+
+        void OnMapUpdated()
+        {
+            Interlocked.Increment(ref _frameCount);
+        }
+
+        double getFps()
+        {
+            double secondsElapsed = (DateTime.Now - _lastCheckTime).TotalSeconds;
+            long count = Interlocked.Exchange(ref _frameCount, 0);
+            double fps = count / secondsElapsed;
+            _lastCheckTime = DateTime.Now;
+            return fps;
+        }
 
         /*
          * End -- Game functions 
         */
 
+        #endregion
 
-
+        #region Powerups
 
         /*
          *
@@ -867,21 +994,27 @@ namespace snaketest
                 dpx = 999;
             else if (bonusx != 999)
                 bonusx = 999;
+            else if (clockx != 999)
+                clockx = 999;
 
-            randomNumber = rand.Next(0, 8); //basically 37% chance of item drop.
-            
+            randomNumber = rand.Next(0, 9); //basically 37% chance of item drop.
+
             switch (randomNumber) // check random number
             {
                 case 5: //ghost
-                    randGhost();
+                    genRandom(ref gx, ref gy);
                     pictureBox1.Invalidate();
                     break;
                 case 4: //doublepoints
-                    randDP();
+                    genRandom(ref dpx, ref dpy);
                     pictureBox1.Invalidate();
                     break;
                 case 6: //bonus points
-                    randBP();
+                    genRandom(ref bonusx, ref bonusy);
+                    pictureBox1.Invalidate();
+                    break;
+                case 1: //slowdown time
+                    genRandom(ref clockx, ref clocky);
                     pictureBox1.Invalidate();
                     break;
             }
@@ -894,18 +1027,8 @@ namespace snaketest
             e.Graphics.DrawImage(new Bitmap(Properties.Resources.ghostpowerup), formgx, formgy, 30, 30); // ghost bitmap for small pow-up picbox
         }
 
-        void randGhost()
-        {
-            randgx = rand.Next(20, 500); // generate random X coord
-            randgy = rand.Next(20, 500); // generate random Y coord
-
-            gx = Math.Round(Math.Ceiling((float)randgx / 20) * 20, MidpointRounding.ToEven); // set gx to the random number
-            gy = Math.Round(Math.Ceiling((float)randgy / 20) * 20, MidpointRounding.ToEven); // set gy to the random number
-
-        }
-
         //timer
-        private void testtimer_Tick(object sender, EventArgs e) // this timer will execute 8 seconds after picking up ghost powerup. it will disable it
+        private void ghostTimer_Tick(object sender, EventArgs e) // this timer will execute 8 seconds after picking up ghost powerup. it will disable it
         {
             ghostmode = false;
             formgx = 999;
@@ -927,16 +1050,6 @@ namespace snaketest
         {
             e.Graphics.DrawImage(new Bitmap(Properties.Resources.doublepoints), formdpx, formdpy, 30, 30);
         }
-
-        void randDP()
-        {
-            randdpx = rand.Next(20, 500);  // generate random X coord
-            randdpy = rand.Next(20, 500);  // generate random Y coord
-
-            dpx = Math.Round(Math.Ceiling((float)randdpx / 20) * 20, MidpointRounding.ToEven); // set dpx to the random number
-            dpy = Math.Round(Math.Ceiling((float)randdpy / 20) * 20, MidpointRounding.ToEven); // set dpy to the random number
-
-        }
         //end double point
 
         //bonus point stuff
@@ -952,17 +1065,23 @@ namespace snaketest
         {
             e.Graphics.DrawImage(new Bitmap(Properties.Resources.bonuspoints), bonusformx, bonusformy, 30, 30);
         }
-
-        void randBP()
-        {
-            bonusrx = rand.Next(20, 500); // generate random X coord
-            bonusry = rand.Next(20, 500); // generate random Y coord
-
-            bonusx = Math.Round(Math.Ceiling((float)bonusrx / 20) * 20, MidpointRounding.ToEven); // set bonusx to the random number
-            bonusy = Math.Round(Math.Ceiling((float)bonusry / 20) * 20, MidpointRounding.ToEven); // set bonusy to the random number
-
-        }
         //end bonus point
+
+        //slowdown stuff
+        private void slowdownTimer_Tick(object sender, EventArgs e)
+        {
+            clockon = false;
+            formclockx = 999;
+            slowdownPow.Invalidate();
+            slowdownTimer.Stop();
+        }
+        
+        private void slowdownPow_Paint(object sender, PaintEventArgs e)
+        {
+            e.Graphics.DrawImage(new Bitmap(Properties.Resources.slowdowntime), formclockx, formclocky, 30, 30);//make clock bitmap
+        }
+
+        //end slowdown
 
         /*
          * 
@@ -972,7 +1091,7 @@ namespace snaketest
          * and stop dis timer.
          * 
         */
-        
+
         private void ghostTime_Tick(object sender, EventArgs e) // countdown timer for the ghost powerup
         {
 
@@ -1018,12 +1137,48 @@ namespace snaketest
                 bpTimeLabel.Hide();
             }
         }
+        private void slowdownTime_Tick(object sender, EventArgs e)
+        {
+            if (timeLeftSD != 0)
+                timeLeftSD -= 1;
+
+            sdLabel.Text = "" + timeLeftSD + " sec.";
+
+            if(timeLeftSD == 0)
+            {
+                if (difficulty == "Easy")
+                {
+                    directionTimer.Interval = 100;
+                    foodEatTimer.Interval = 100;
+                }
+                else if (difficulty == "Normal")
+                {
+                    directionTimer.Interval = 70;
+                    foodEatTimer.Interval = 70;
+                }
+                else if (difficulty == "Hard")
+                {
+                    directionTimer.Interval = 60;
+                    foodEatTimer.Interval = 60;
+                }
+                else if (difficulty == "Expert")
+                {
+                    directionTimer.Interval = 40;
+                    foodEatTimer.Interval = 40;
+                }
+
+                slowdownTime.Stop();
+                sdLabel.Hide();
+            }
+        }
 
         /*
          * End -- Powerups 
         */
 
-
+        #endregion
+        
+        #region Difficulty
 
         /*
          * Difficulty 
@@ -1132,7 +1287,7 @@ namespace snaketest
             setDifficulty();
         }
 
-        void setDifficulty()
+        private void setDifficulty()
         {
             if (esy)
                 difficulty = "Easy";
@@ -1148,7 +1303,9 @@ namespace snaketest
          * End--Dificulty
         */
 
-
+        #endregion
+        
+        #region Button Functions
 
         /*
          * Buttons: 
@@ -1163,7 +1320,7 @@ namespace snaketest
 
         private void pauseplayButton_Click(object sender, EventArgs e) // Pause/Play button
         {
-            if(pauseplayButton.Text == "Pause")
+            if (pauseplayButton.Text == "Pause")
             {
                 _menselect.Play();
                 directionTimer.Stop();
@@ -1224,7 +1381,7 @@ namespace snaketest
         private void boundsLabel_Click(object sender, EventArgs e) // Disable/Enable bounds
         {
             _menselect.Play();
-            if(boundsLabel.Text == "Bounds - On")
+            if (boundsLabel.Text == "Bounds - On")
             {
                 bounds = false;
                 boundsLabel.Text = "Bounds - Off";
@@ -1240,12 +1397,12 @@ namespace snaketest
         {
             string latestOrOld;
 
-            if (currentUpdate == newUpdate)
+            if (latest)
                 latestOrOld = "Latest Build.";
             else
                 latestOrOld = "Old Build.";
 
-            MessageBox.Show("Created by Carson Kelley\n" + latestOrOld + " Build#: " + currentUpdate, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Created by Carson Kelley\n" + latestOrOld + " Build#: " + uc.currentUpdate, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void muteButton_Click(object sender, EventArgs e) // Mute/Unmute Button
@@ -1280,7 +1437,7 @@ namespace snaketest
             {
                 aiEnabled.Text = "AI Enemy - On";
                 aiEnemy = true;
-                if(!gameOver)
+                if (!gameOver)
                     aiDirection.Start();
                 AIRestart();
             }
@@ -1299,7 +1456,7 @@ namespace snaketest
             if (evilBallOn.Text == "Evil Ball - Off")
             {
                 evilBall = true;
-                ballRand();
+                genRandom(ref ballx, ref bally);
                 evilBallOn.Text = "Evil Ball - On";
             }
             else
@@ -1309,10 +1466,26 @@ namespace snaketest
             }
         }
 
+        private void highScoreLabel_Click(object sender, EventArgs e) // very simple, allows player to reset high score if they want to.
+        {
+
+            DialogResult dr = MessageBox.Show("Would you like to reset your high score?\nWARNING: NO GOING BACK!", "Reset High Score?", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+
+            if (dr == DialogResult.Yes)
+            {
+                file.Reset();
+                highScore = 0;
+            }
+            else
+            {
+                return;
+            }
+        }
+
         /*
          * End--Buttons 
         */
 
-
+        #endregion
     }
 }

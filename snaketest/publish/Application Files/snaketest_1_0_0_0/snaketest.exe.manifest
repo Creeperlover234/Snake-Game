@@ -1,0 +1,171 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<asmv1:assembly xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" manifestVersion="1.0" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2">
+  <asmv1:assemblyIdentity name="snaketest.exe" version="1.0.0.0" publicKeyToken="89b19ad04404131d" language="neutral" processorArchitecture="msil" type="win32" />
+  <description asmv2:iconFile="ico.ico" xmlns="urn:schemas-microsoft-com:asm.v1" />
+  <application />
+  <entryPoint>
+    <assemblyIdentity name="snaketest" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+    <commandLine file="snaketest.exe" parameters="" />
+  </entryPoint>
+  <trustInfo>
+    <security>
+      <applicationRequestMinimum>
+        <PermissionSet Unrestricted="true" ID="Custom" SameSite="site" />
+        <defaultAssemblyRequest permissionSetReference="Custom" />
+      </applicationRequestMinimum>
+      <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
+        <!--
+          UAC Manifest Options
+          If you want to change the Windows User Account Control level replace the 
+          requestedExecutionLevel node with one of the following.
+
+        <requestedExecutionLevel  level="asInvoker" uiAccess="false" />
+        <requestedExecutionLevel  level="requireAdministrator" uiAccess="false" />
+        <requestedExecutionLevel  level="highestAvailable" uiAccess="false" />
+
+         If you want to utilize File and Registry Virtualization for backward 
+         compatibility then delete the requestedExecutionLevel node.
+    -->
+        <requestedExecutionLevel level="asInvoker" uiAccess="false" />
+      </requestedPrivileges>
+    </security>
+  </trustInfo>
+  <dependency>
+    <dependentOS>
+      <osVersionInfo>
+        <os majorVersion="5" minorVersion="1" buildNumber="2600" servicePackMajor="0" />
+      </osVersionInfo>
+    </dependentOS>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Microsoft.Windows.CommonLanguageRuntime" version="4.0.30319.0" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MaterialDesignColors.dll" size="228352">
+      <assemblyIdentity name="MaterialDesignColors" version="1.0.0.14576" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>gia3dKTk7GDLhMHk9Z10TCiBlNhq4WH4xBg+c+/mS40=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MaterialSkin.dll" size="589824">
+      <assemblyIdentity name="MaterialSkin" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>SXbed8MkGmQfanDm6T2ETMidwxRs8UgP1cmCVlFuzwU=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="snaketest.exe" size="1339368">
+      <assemblyIdentity name="snaketest" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>EFeSH5YeLZB9SliQkyyV+9lR0IkhC2wAyYwUmCdGH6M=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <file name="bonuspoints.png" size="2125">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>9jSeDFhTpGIBqLHsKGwf/gbDRnLGXuScchzY8JSt4K4=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="die.wav" size="21930">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>Tn+gWO3QTX/Z2yyxQALv3DJGgGHKrnZgaSxSG7hC1q4=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="doublepoints.png" size="2172">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>5Ka/wqjC0rVDT9ygtK5P6xyzI5oFwMpT4gezbnhxzZM=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="eatfood.wav" size="13366">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>jEZZUcMUV/xR+uRmzMJbzxNK7oBi0LP6DnPxEG41bRU=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="ghostpowerup.png" size="1929">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>kbeR1GgrGbiieLn0ImUcXwPyAXRqmTZapmtAaMGVC4A=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="ico.ico" size="16958">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>lHJG9n/Hvhffi4aQq1ab/EWeC6rRmCxV0e9XdZMkgDQ=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="menselect.wav" size="10188">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>+Lp+tdAjknCqqecY2NFf1fK/L9fWNi5chM0hS5ybrtM=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="powerup.wav" size="53854">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>LVaNzDNtVQN8kl1OX5/SDHmd3nXSPSU/aH0vn0o70Fc=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="snakefood.png" size="2059">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>uXtBEWxKuT4l/D9uFaWxmkwbdM1I7L64rSbBRnh5h2M=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="snaketest.exe.config" size="184">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>gXPU0Xy3KObyxeLOgSTOfrD0WdxiCFvKq3hqvx9rN6c=</dsig:DigestValue>
+    </hash>
+  </file>
+<publisherIdentity name="CN=DESKTOP-6RT5UJB\Carson" issuerKeyHash="52579d047cdbd2838bb50508a2692d3040ecbe0c" /><Signature Id="StrongNameSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha256" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" /><DigestValue>hbNOIVngXGz8nj1aICjnOuwYaA3yQKT6Bt8DV7gBaw4=</DigestValue></Reference></SignedInfo><SignatureValue>GS44mNmAMql7Gkoci8E7PrOdYB5KodkqcAgf7qca2hAuoCAMKVDr0GTW9R+5U4oJQYIkkjHlKIU4Jp0BMjL6mIPjlbmkrG7weRFNbOoy45bTlprgh+fvq4yRo7fjmE5WPAElzUY64KJ+owSjEtxYJxfo5r8lJM1tRoAGpoSNasU=</SignatureValue><KeyInfo Id="StrongNameKeyInfo"><KeyValue><RSAKeyValue><Modulus>3/P4xNOns/est1tLWc0kbro802SXpM4qVCB/ePxYHVX/Y3wgrVIth0m1mbW2BWLwgvb7fBTvXf1GxytucWQE4B+oKg+fMD+SXEu3mCLdz+XBhDzKc/UdGZ6pIEgZJvANo2GyjLFAlkmRH9jjJg920huehKoqdjSSVyS4ZghNsB0=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><msrel:RelData xmlns:msrel="http://schemas.microsoft.com/windows/rel/2005/reldata"><r:license xmlns:r="urn:mpeg:mpeg21:2003:01-REL-R-NS" xmlns:as="http://schemas.microsoft.com/windows/pki/2005/Authenticode"><r:grant><as:ManifestInformation Hash="0e6b01b85703df06faa440f20d6818ec3ae728205a3d9efc6c5ce059214eb385" Description="" Url=""><as:assemblyIdentity name="snaketest.exe" version="1.0.0.0" publicKeyToken="89b19ad04404131d" language="neutral" processorArchitecture="msil" type="win32" /></as:ManifestInformation><as:SignedBy /><as:AuthenticodePublisher><as:X509SubjectName>CN=DESKTOP-6RT5UJB\Carson</as:X509SubjectName></as:AuthenticodePublisher></r:grant><r:issuer><Signature Id="AuthenticodeSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha256" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" /><DigestValue>h2vz7nxw5CvWXLKH5UjeJRPnBCzMJkitkF/JnfzxLUE=</DigestValue></Reference></SignedInfo><SignatureValue>tQYqsIZp28BpPEObEGIs3e0pCudkrDzdXzPtMd98ovNF1Fu8Yqkggtq7xpmIjHaLlxXMTY6/VGRe9JK/RdEK07fPSO3TOGasCF0xG+4YMYxGJwwtOF8PBcmXazmS2B+QOwfL79qykUOTZlOM2ChsvT+rrN68FE1Ba5M5MdNSQg0=</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>3/P4xNOns/est1tLWc0kbro802SXpM4qVCB/ePxYHVX/Y3wgrVIth0m1mbW2BWLwgvb7fBTvXf1GxytucWQE4B+oKg+fMD+SXEu3mCLdz+XBhDzKc/UdGZ6pIEgZJvANo2GyjLFAlkmRH9jjJg920huehKoqdjSSVyS4ZghNsB0=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><X509Data><X509Certificate>MIIB8TCCAVqgAwIBAgIQSr2tq7wjPaFHWE6tIUwoGDANBgkqhkiG9w0BAQsFADA3MTUwMwYDVQQDHiwARABFAFMASwBUAE8AUAAtADYAUgBUADUAVQBKAEIAXABDAGEAcgBzAG8AbjAeFw0xODExMjEyMjM0MjlaFw0xOTExMjIwNDM0MjlaMDcxNTAzBgNVBAMeLABEAEUAUwBLAFQATwBQAC0ANgBSAFQANQBVAEoAQgBcAEMAYQByAHMAbwBuMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDf8/jE06ez96y3W0tZzSRuujzTZJekzipUIH94/FgdVf9jfCCtUi2HSbWZtbYFYvCC9vt8FO9d/UbHK25xZATgH6gqD58wP5JcS7eYIt3P5cGEPMpz9R0ZnqkgSBkm8A2jYbKMsUCWSZEf2OMmD3bSG56Eqip2NJJXJLhmCE2wHQIDAQABMA0GCSqGSIb3DQEBCwUAA4GBAK5Fjm1CLRHO6MgUqPFHspWcfFXNrOTieB/zxNZDwmglPcjBSM1l9XKs/wf8VpsODaBJtdiaJ6HNbPgTURKqZH4Y8d+gD8h7ud9zfJfaD8l09/59eQj1/DxWc2aHAGKB93WICEWwhVAj8fMeCCd3FecWlBLoUHH2Mpv3gMMYsuYw</X509Certificate></X509Data></KeyInfo></Signature></r:issuer></r:license></msrel:RelData></KeyInfo></Signature></asmv1:assembly>

@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Timers;
 
 namespace snaketest
 {
     class Enemy
     {
-        public Rectangle[] AIBody; // body of snake, needs to be array so we can add to it.
-        int speed = 20; // default speed of snake
+        //yes, this is copy-pasted from snake.cs no point in rewriting code that was already written.
+        public Rectangle[] AIBody; // body of enemy, needs to be array so we can add to it.
+        int speed = 20;
         public enum DirectionAI { Up, Down, Left, Right, NONE };
         public DirectionAI directionAI;
         LinearGradientBrush bodyColor = new LinearGradientBrush(new Point(-10, 550), new Point(560, -10), Color.FromArgb(255, 255, 0, 0), Color.FromArgb(255, 0, 0, 255));
@@ -25,17 +22,16 @@ namespace snaketest
 
         /*
          * 
-         * This is the class for the snake. Most of this stuff is pretty self-explanatory.
-         * We create a rectangle array, when draw function is called, draw the snake.
-         * When Grow method is called, we add another rectangle to the array. -- this would not be possible without an rectangle array.
-         * Move method, obviously sets direction the snake is going in.
+         * This class is for the enemy AI. This is literally almost completley copy-pasted from the Snake.cs class
+         * because I see no purpose in completely rewriting something that is already done. It makes it easier to
+         * get this done. Anyways, this is just for the enemy that trys to steal your apples.
          * 
         */
 
         public Enemy()
         {
             AIBody = new Rectangle[1];
-            AIBody[0] = new Rectangle(x, y, width, height); // for drawing snake
+            AIBody[0] = new Rectangle(x, y, width, height); // draw enemy
         }
 
         public void UpdateBody()
@@ -47,16 +43,17 @@ namespace snaketest
         public void Draw(Graphics g)
         {
             for (int i = AIBody.Length - 1; i > 0; i--)
-                g.FillEllipse(Brushes.Red, AIBody[i]); // MOAR CIRCLEZZZZZ
+                g.FillEllipse(Brushes.Red, AIBody[i]);
 
-            g.FillEllipse(Brushes.Tomato, AIBody[0]); // CIRCLES
+            g.FillEllipse(Brushes.DarkRed, AIBody[0]);
 
         }
 
-        public void Grow() // creates new rectangle to snake array, in essence, the snake 'grows'
+        public void Grow() // creates new rectangle to snake array, in essence, the enemy 'grows'
         {
-            List<Rectangle> bodyAdd = AIBody.ToList(); // we do this to make life easier ;)
-            bodyAdd.Add(new Rectangle(AIBody[AIBody.Length - 1].X, AIBody[AIBody.Length - 1].Y, width, height)); // add rectangle to list
+            List<Rectangle> bodyAdd = AIBody.ToList();
+            bodyAdd.Add(new Rectangle(AIBody[AIBody.Length - 1].X, AIBody[AIBody.Length - 1].Y, width, height));
+            bodyAdd.Add(new Rectangle(AIBody[AIBody.Length - 1].X, AIBody[AIBody.Length - 1].Y, width, height));
             AIBody = bodyAdd.ToArray();
         }
 

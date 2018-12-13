@@ -11,7 +11,6 @@ C:\Users\cbcke\source\repos\snaketest\snaketest\obj\Debug\snaketest.pdb
 C:\Users\KelCar0627b\source\repos\snaketest\snaketest\bin\Debug\snaketest.exe.config
 C:\Users\KelCar0627b\source\repos\snaketest\snaketest\bin\Debug\snaketest.exe
 C:\Users\KelCar0627b\source\repos\snaketest\snaketest\bin\Debug\snaketest.pdb
-C:\Users\KelCar0627b\source\repos\snaketest\snaketest\obj\Debug\snaketest.csprojResolveAssemblyReference.cache
 C:\Users\KelCar0627b\source\repos\snaketest\snaketest\obj\Debug\snaketest.Form1.resources
 C:\Users\KelCar0627b\source\repos\snaketest\snaketest\obj\Debug\snaketest.Properties.Resources.resources
 C:\Users\KelCar0627b\source\repos\snaketest\snaketest\obj\Debug\snaketest.csproj.GenerateResource.cache
@@ -55,3 +54,16 @@ D:\Github\SnakeGame\Snake-Game\snaketest\obj\Debug\snaketest.csproj.GenerateReso
 D:\Github\SnakeGame\Snake-Game\snaketest\obj\Debug\snaketest.csproj.CoreCompileInputs.cache
 D:\Github\SnakeGame\Snake-Game\snaketest\obj\Debug\snaketest.exe
 D:\Github\SnakeGame\Snake-Game\snaketest\obj\Debug\snaketest.pdb
+C:\Users\cbcke\source\repos\snaketest\snaketest\bin\Debug\snaketest.exe.manifest
+C:\Users\cbcke\source\repos\snaketest\snaketest\bin\Debug\snaketest.application
+C:\Users\cbcke\source\repos\snaketest\snaketest\obj\Debug\snaketest.exe.manifest
+C:\Users\cbcke\source\repos\snaketest\snaketest\obj\Debug\snaketest.application
+C:\Users\KelCar0627b\source\repos\snaketest\snaketest\obj\Debug\snaketest.csprojAssemblyReference.cache
+C:\Users\KelCar0627b\source\repos\snaketest\snaketest\bin\Debug\snaketest.exe.manifest
+C:\Users\KelCar0627b\source\repos\snaketest\snaketest\bin\Debug\snaketest.application
+C:\Users\KelCar0627b\source\repos\snaketest\snaketest\obj\Debug\snaketest.exe.manifest
+C:\Users\KelCar0627b\source\repos\snaketest\snaketest\obj\Debug\snaketest.application
+D:\Github\SnakeGame\Snake-Game\snaketest\bin\Debug\snaketest.exe.manifest
+D:\Github\SnakeGame\Snake-Game\snaketest\bin\Debug\snaketest.application
+D:\Github\SnakeGame\Snake-Game\snaketest\obj\Debug\snaketest.exe.manifest
+D:\Github\SnakeGame\Snake-Game\snaketest\obj\Debug\snaketest.application

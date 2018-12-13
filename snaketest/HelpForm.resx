@@ -117,31 +117,31 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="applLabel.Text" xml:space="preserve">
-    <value>This is an apple. Your objective  is to eat 
-this apple. Each time you eat this apple, 
-it will move somewhere else on the gameboard. 
-You will notice as you eat more and more of 
-these apples, your snake slowly grows. 
-Eat these apples to gain points and grow your snake!</value>
+  <data name="infoBox1.Text" xml:space="preserve">
+    <value>This is an apple. Your objective  is to eat  this apple.
+Each time you eat this apple,  it will move somewhere 
+else on the gameboard. You will notice as you eat 
+more and more of these apples, your snake slowly 
+grows. Eat these apples to gain points and grow 
+your snake!</value>
   </data>
-  <data name="label2.Text" xml:space="preserve">
-    <value>This powerup is Double Points. This powerup will
-give your snake the ability to grow x2 the speed.
-When you eat an apple, not only do you gain 20
-points instead of 10, but, you also grow twice.
-Again, be mindful of how long this powerup lasts.
-This powerup only lasts 10 seconds.</value>
+  <data name="infoBox2.Text" xml:space="preserve">
+    <value>This is the ghost powerup. When eaten, your snake 
+becomes a ghost. This allows your snake to go
+right through your body without dying. This can
+give an significant advantage on higher difficulties.
+But, watch out. This powerup only lasts 8 seconds!</value>
   </data>
-  <data name="label3.Text" xml:space="preserve">
-    <value>This powerup is Bonus Points. This 
-powerup will help you gain more 
-points and get the highest score 
-possible. Unlike double points, this 
-powerup triples the amount of points 
-you gain when you eat an apple. 
-Though, you do not grow larger than
-normal. This powerup lasts 15 seconds.</value>
+  <data name="controlLabel.Text" xml:space="preserve">
+    <value>W/Up Arrow: Moves snake up.
+A/Left Arrow: Moves snake left.
+S/Down Arrow: Moves snake down.
+D/Right Arrow: Moves snake right.
+R/Enter: Restarts the current game.
+1-4: Changes the difficulty.
+Esc: Pauses the current game
+F4: Changes Game to fullscreen.
+M: Mutes the game sound.</value>
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

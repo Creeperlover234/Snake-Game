@@ -108,6 +108,18 @@ namespace snaketest.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+        ///&lt;Weavers xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xsi:noNamespaceSchemaLocation=&quot;FodyWeavers.xsd&quot;&gt;
+        ///  &lt;Costura /&gt;
+        ///&lt;/Weavers&gt;.
+        /// </summary>
+        internal static string FodyWeavers {
+            get {
+                return ResourceManager.GetString("FodyWeavers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap ghostpowerup {
@@ -124,6 +136,16 @@ namespace snaketest.Properties {
             get {
                 object obj = ResourceManager.GetObject("ico", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] MaterialSkin {
+            get {
+                object obj = ResourceManager.GetObject("MaterialSkin", resourceCulture);
+                return ((byte[])(obj));
             }
         }
         
@@ -152,6 +174,16 @@ namespace snaketest.Properties {
         internal static System.IO.UnmanagedMemoryStream powerup {
             get {
                 return ResourceManager.GetStream("powerup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap slowdowntime {
+            get {
+                object obj = ResourceManager.GetObject("slowdowntime", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
