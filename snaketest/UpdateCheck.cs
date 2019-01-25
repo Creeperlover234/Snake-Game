@@ -27,7 +27,7 @@ namespace snaketest
 
             try // exception handling
             {
-                byte[] webData = webc.DownloadData("https://raw.githubusercontent.com/Creeperlover234/Snake-Game/master/release"); // get latest release
+                byte[] webData = webc.DownloadData("https://raw.githubusercontent.com/StrugglingDoge/Snake-Game/master/release"); // get latest release
 
                 newUpdate = Encoding.UTF8.GetString(webData); // translate that boi
 
@@ -41,7 +41,7 @@ namespace snaketest
                     DialogResult UpdateYesNo = MessageBox.Show("There is a newer version of this application.\nWould you like to update?", "New Update " + newUpdate, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk);
                     if (UpdateYesNo == DialogResult.Yes)
                     {
-                        Process.Start("https://github.com/Creeperlover234/Snake-Game/releases");
+                        Process.Start("https://github.com/StrugglingDoge/Snake-Game/releases");
                     }
                     else { }
                 }
